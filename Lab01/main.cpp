@@ -98,7 +98,14 @@ void task_3_3() {
 
 int main()
 {
-    std::cout << "Zadanie 3.1:\n" << std::endl;;
+    Kolo k1 = Kolo(2);
+    Trojkat t1 = Trojkat(2, 3, 4);
+    Trojkat t2 = Trojkat(3, 4, 5);
+    Prostokat p1 = Prostokat(1, 2);
+    Prostokat p2 = Prostokat(2, 3);
+    Prostokat p3 = Prostokat(3, 4);
+
+    std::cout << "\nZadanie 3.1:\n" << std::endl;;
     task_3_1();
     std::cout << "\nZadanie 3.2:\n"<< std::endl;
     task_3_2();

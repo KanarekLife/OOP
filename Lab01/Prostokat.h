@@ -6,6 +6,7 @@ private:
 	double a, b;
 protected:
 	void Wypisz(std::ostream& out) const override;
+	static int liczbaProstokatow;
 public:
 	Prostokat(double a, double b);
 	double GetA() const;

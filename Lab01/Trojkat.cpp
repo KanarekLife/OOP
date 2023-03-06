@@ -7,6 +7,9 @@ void Trojkat::Wypisz(std::ostream& out) const {
 
 Trojkat::Trojkat(double a, double b, double c) : a(a), b(b), c(c) {
 	std::cout << "Konstruktor Trojkata(" << a << ", " << b << ", " << c << ")" << std::endl;
+	this->liczbaObiektow++;
+	this->liczbaTrojkatow++;
+	std::cout << "Liczba figur: " << this->liczbaObiektow << ", Liczba trojkatow: " << this->liczbaTrojkatow << std::endl;
 }
 
 double Trojkat::GetA() const {
@@ -45,3 +48,5 @@ double Trojkat::Pole() {
 Trojkat::~Trojkat() {
 	std::cout << "Dekonstruktor Trojkata(" << a << ", " << b << ", " << c << ")" << std::endl;
 }
+
+int Trojkat::liczbaTrojkatow = 0;

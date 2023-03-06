@@ -2,6 +2,9 @@
 
 Prostokat::Prostokat(double a, double b) : a(a), b(b) {
 	std::cout << "Konstruktor Prostokata(" << a << ", " << b << ")" << std::endl;
+	this->liczbaObiektow++;
+	this->liczbaProstokatow++;
+	std::cout << "Liczba figur: " << this->liczbaObiektow << ", Liczba prostokatow: " << this->liczbaProstokatow << std::endl;
 }
 
 double Prostokat::GetA() const {
@@ -35,3 +38,5 @@ void Prostokat::Wypisz(std::ostream& out) const {
 Prostokat::~Prostokat() {
 	std::cout << "Dekonstruktor Prostokata(" << a << ", " << b << ")" << std::endl;
 }
+
+int Prostokat::liczbaProstokatow = 0;

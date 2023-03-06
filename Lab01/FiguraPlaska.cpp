@@ -7,3 +7,5 @@ std::ostream& operator<<(std::ostream& os, const FiguraPlaska& figura) {
 }
 
 FiguraPlaska::~FiguraPlaska() {}
+
+int FiguraPlaska::liczbaObiektow = 0;

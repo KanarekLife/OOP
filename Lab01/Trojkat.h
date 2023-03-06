@@ -5,6 +5,7 @@ class Trojkat : public FiguraPlaska
 	double a, b, c; // Private by default
 protected:
 	void Wypisz(std::ostream& out) const override;
+	static int liczbaTrojkatow;
 public:
 	Trojkat(double a, double b, double c);
 	double GetA() const;

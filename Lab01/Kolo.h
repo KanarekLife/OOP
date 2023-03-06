@@ -6,6 +6,7 @@ private:
 	double r;
 protected:
 	void Wypisz(std::ostream& out) const override;
+	static int liczbaKol;
 public:
 	Kolo(double r);
 	double GetR() const;
