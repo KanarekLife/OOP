@@ -21,5 +21,6 @@ public:
 	std::size_t GetSize() const;
 	~Library();
 	friend std::ostream& operator<<(std::ostream& out, const Library& library);
+	friend void SwapBooksInLibrary(Library& l1, Library& l2);
 };
 

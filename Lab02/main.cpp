@@ -39,9 +39,36 @@ void LibraryTests() {
     std::cout << "l1: " << l1 << " e: " << e << std::endl;
 }
 
+void LastTests() {
+    Library l1 = {
+        {"Rafal Kosik", "Felix, Net i Nika"},
+        {"Frank Herbert", "Dune"},
+        {"Andrzej Sapkowski", "Wiedzmin"} 
+    };
+    Library l2 = {
+        {"Zofia Naukowska", "Granica"},
+        {"Jeff Kinney", "Dzienniczek Cwaniaczka"}
+    };
+
+    std::cout << "BEFORE SWAP:" << std::endl;
+    std::cout << "l1: " << l1 << std::endl;
+    std::cout << "l1l: " << l1.GetSize() << std::endl;
+    std::cout << "l2: " << l2 << std::endl;
+    std::cout << "l2l: " << l2.GetSize() << std::endl;
+
+    SwapBooksInLibrary(l1, l2);
+
+    std::cout << "AFTER SWAP:" << std::endl;
+    std::cout << "l1: " << l1 << std::endl;
+    std::cout << "l1l: " << l1.GetSize() << std::endl;
+    std::cout << "l2: " << l2 << std::endl;
+    std::cout << "l2l: " << l2.GetSize() << std::endl;
+}
+
 int main()
 {
     BookTests();
     LibraryTests();
+    LastTests();
 }
 

@@ -63,3 +63,13 @@ std::ostream& operator<<(std::ostream& out, const Library& library) {
 	out << "]";
 	return out;
 }
+
+void SwapBooksInLibrary(Library& l1, Library& l2) {
+	Book *temp = new Book[l1.size];
+	int tempSize = l1.size;
+	std::swap(temp, l1.arr);
+	l1.size = l2.size;
+	std::swap(l1.arr, l2.arr);
+	l2.size = tempSize;
+	std::swap(l2.arr, temp);
+}
