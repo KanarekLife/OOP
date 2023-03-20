@@ -16,7 +16,7 @@ public class Obrot implements Transformacja {
     }
 
     @Override
-    public Transformacja getTransformacjaOdwrotna() throws BrakTransformacjiOdwrotnejException {
+    public Transformacja getTransformacjaOdwrotna() {
         return new Obrot(-angle);
     }
 }

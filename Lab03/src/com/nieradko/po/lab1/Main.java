@@ -54,8 +54,8 @@ public class Main {
         catch(BrakTransformacjiOdwrotnejException ex)
         {
             ex.printStackTrace();
+            System.out.println();
         }
-        System.out.println();
     }
 
     private static void zadanie3() throws BrakTransformacjiOdwrotnejException {
@@ -92,14 +92,40 @@ public class Main {
         System.out.println(t.transformuj(p1));
         System.out.println(t.getTransformacjaOdwrotna().transformuj(t.transformuj(p1)));
     }
+    private static void zadanie5() throws NiewlasciwyTrojkatException, BrakTransformacjiOdwrotnejException {
+        Trojkat t = new Trojkat(
+                new Punkt(0,0),
+                new Punkt(4, 0),
+                new Punkt(0, 5)
+        );
+
+        Transformacja transformacja = new ZlozenieTransformacji(new Transformacja[]{
+           new Translacja(1, 1), new Obrot(20), new Skalowanie(10, 5.3)
+        });
+        Transformacja transformacjaOdwrotna = transformacja.getTransformacjaOdwrotna();
+
+        Trojkat t1 = transformacja.transformuj(t);
+        Trojkat t2 = transformacjaOdwrotna.transformuj(t);
+
+        System.out.println();
+        System.out.println(t);
+        System.out.println(t1);
+        System.out.println(t2);
+    }
 
     public static void main(String[] args) {
-        //zadanie2();
+        zadanie2();
         try {
             zadanie3();
             zadanie4();
-        }catch(BrakTransformacjiOdwrotnejException ex) {
-
+            zadanie5();
+            Trojkat t = new Trojkat(
+                    new Punkt(0, 0),
+                    new Punkt(0, 0),
+                    new Punkt(1, 3)
+            );
+        }catch(Exception ex) {
+            System.out.println(ex.toString());
         }
     }
 }
