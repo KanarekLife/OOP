@@ -32,9 +32,9 @@ public class JavaLab2 {
         SymulatorWycieczki symulator = new SymulatorWycieczki(g, zadanie2());
 
         symulator.dodajSluchaczPosteow((ElementWycieczki elementWycieczki, int lp, int liczbaElementow) -> {
-            System.out.println();
-            System.out.println("POSTEP: " + (lp + 1) + " / " + liczbaElementow);
-            System.out.println();
+            System.out.println("\n>");
+            System.out.println("> POSTEP: " + (lp + 1) + " / " + liczbaElementow);
+            System.out.println(">");
         });
         
         symulator.symuluj();

@@ -81,7 +81,7 @@ public class SymulatorWycieczki {
                 System.out.println("Grupa zwiedza atrakcję: " + a.getNazwa());
 
                 for (Uczestnik u : grupa.getUczestnicy()) {
-                    u.reagujNaAtrakcje(a, a.getCzas());
+                    u.reagujNaAtrakcje(a, a.getWymaganyCzas());
                 }
             }
 

@@ -31,16 +31,16 @@ public class Wycieczka {
                 .reduce(0.0, Double::sum);
     }
     
-//    /**
-//     * @return Sumaryczny czas wszystkich atrakcji 
-//     */
-//    public double getCzasAtrakcji() {
-//        return elementy.stream()
-//                .filter(ew -> ew instanceof Atrakcja)
-//                .map(ew -> (Atrakcja)ew)
-//                .map(Atrakcja::getWymaganyCzas)
-//                .reduce(0.0, (a,b) -> Double::sum);
-//    }
+    /**
+     * @return Sumaryczny czas wszystkich atrakcji
+     */
+    public double getCzasAtrakcji() {
+        return elementy.stream()
+                .filter(ew -> ew instanceof Atrakcja)
+                .map(ew -> (Atrakcja)ew)
+                .map(Atrakcja::getWymaganyCzas)
+                .reduce(0.0, (a,b) -> a + b);
+    }
     
     public ElementWycieczki getElementWycieczki(int i) {
         return elementy.get(i);

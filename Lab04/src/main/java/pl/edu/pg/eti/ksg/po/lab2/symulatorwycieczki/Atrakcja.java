@@ -7,7 +7,7 @@ public abstract class Atrakcja implements ElementWycieczki {
         this.czas = czas;
     }
 
-    public double getCzas() {
+    public double getWymaganyCzas() {
         return czas;
     }
 }
