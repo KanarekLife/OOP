@@ -308,8 +308,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Organism.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Position.cpp" />
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Position.h" />
-    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animal.cpp" />
-    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animal.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Animal.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Animal.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Wolf.cpp" />
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Wolf.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\CollisionContext.cpp" />
@@ -322,8 +322,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Turtle.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.cpp" />
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.h" />
-    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.cpp" />
-    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Plant.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Plant.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.cpp" />
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Dandelion.cpp" />

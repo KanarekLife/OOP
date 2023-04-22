@@ -13,7 +13,7 @@
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Position.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animal.cpp">
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Animal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Wolf.cpp">
@@ -34,7 +34,7 @@
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.cpp">
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Plant.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.cpp">
@@ -66,7 +66,7 @@
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Position.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animal.h">
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Animal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Wolf.h">
@@ -87,7 +87,7 @@
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.h">
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Plant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.h">

@@ -1,6 +1,5 @@
 #include "PineBorscht.h"
 #include "../World.h"
-#include "../Animal.h"
 
 PineBorscht::PineBorscht(Position&& position) : Plant(10, 'Y', std::move(position)) {}
 
@@ -11,11 +10,13 @@ std::string PineBorscht::GetType() const { return PineBorscht::Type; }
 Organism* PineBorscht::GetNewOfType(Position&& position) { return new PineBorscht(std::move(position)); }
 
 void PineBorscht::HandleAction(World& world) {
-    for (Organism* organism : world.GetOrganismsAtNearbyPositions(this->GetPosition())) {
+    std::vector<Organism*> x = world.GetOrganismsAtNearbyPositions(this->GetPosition());
+    for (Organism* organism : x) {
         if (dynamic_cast<Animal*>(organism) != nullptr &&  organism->GetType() != "CyberSheep") { // TODO Fix when CyberSheep is implemented
             world.Kill(organism);
         }
     }
+    world.Log("[PineBorscht] PineBorscht has killed " + std::to_string(x.size()) + " organisms at " + this->GetPosition().ToString());
     Plant::HandleAction(world);
 }
 

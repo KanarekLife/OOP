@@ -14,6 +14,7 @@ Organism* Nightshade::GetNewOfType(Position&& position) {
 }
 
 void Nightshade::HandleCollision(CollisionContext& context) {
+    context.GetWorld().Log("[Nightshade] Nightshade was eaten by " + context.GetAttacker()->GetType() + " which killed it at " + this->GetPosition().ToString());
     context.KillHost();
     context.KillAttacker();
 }

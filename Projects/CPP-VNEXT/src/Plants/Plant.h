@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Organism.h"
+#include "../Organism.h"
 
 class Plant : public Organism {
 public:

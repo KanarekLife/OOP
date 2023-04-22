@@ -2,7 +2,10 @@
 #include "Human.h"
 #include "../World.h"
 
-Human::Human(Position&& position) : Animal(5, 4, 'H', std::move(position)) {}
+Human::Human(Position&& position) : Animal(5, 4, 'H', std::move(position)) {
+    this->specialPowerTimer = 5;
+    this->isSpecialPowerActive = false;
+}
 
 const std::string Human::Type = "Human";
 
@@ -15,9 +18,12 @@ Organism* Human::GetNewOfType(Position&& position) {
 }
 
 void Human::HandleAction(World& world) {
+    this->SpecialPowerTick();
+
     bool inputEntered = false;
-    while(!inputEntered) {
-        switch((char)_getch()) {
+    while(!inputEntered && world.IsRunning()) {
+        char c = (char)_getch();
+        switch(c) {
             case 'w':
                 inputEntered = this->TryToMove(world, GetPosition().WithOffset(0, 1));
                 break;
@@ -30,6 +36,14 @@ void Human::HandleAction(World& world) {
             case 'a':
                 inputEntered = this->TryToMove(world, GetPosition().WithOffset(-1, 0));
                 break;
+            case 'j':
+                inputEntered = true;
+                TryToActivateSpecialPower();
+                break;
+            case 27: // ESC
+                world.Stop();
+                inputEntered = true;
+                break;
             default:
                 continue;
         }
@@ -37,7 +51,14 @@ void Human::HandleAction(World& world) {
 }
 
 void Human::HandleCollision(CollisionContext& collisionContext) {
-    Animal::HandleCollision(collisionContext);
+    if (this->isSpecialPowerActive) {
+        World& world = collisionContext.GetWorld();
+        std::vector<Organism*> x = world.GetOrganismsAtNearbyPositions(GetPosition());
+        for (Organism* organism : x) {
+            world.Kill(organism);
+        }
+        world.Log("[Całopalenie] Human has killed " + std::to_string(x.size()) + " organisms with the usage of his special power");
+    }
 }
 
 bool Human::TryToMove(World& world, Position&& newPosition) {
@@ -47,4 +68,31 @@ bool Human::TryToMove(World& world, Position&& newPosition) {
         return true;
     }
     return false;
+}
+
+bool Human::TryToActivateSpecialPower() {
+    if (!this->isSpecialPowerActive && this->specialPowerTimer == 0) {
+        this->isSpecialPowerActive = true;
+        this->specialPowerTimer = 5;
+        return true;
+    }
+    return false;
+}
+
+bool Human::IsSpecialPowerActive() const {
+    return this->isSpecialPowerActive;
+}
+
+void Human::SpecialPowerTick() {
+    this->specialPowerTimer = std::max(0, this->specialPowerTimer - 1);
+
+    if (this->specialPowerTimer == 0 && this->isSpecialPowerActive) {
+        this->isSpecialPowerActive = false;
+        this->specialPowerTimer = 5;
+        return;
+    }
+}
+
+int Human::GetSpecialPowerTimer() const {
+    return this->specialPowerTimer;
 }

@@ -28,11 +28,11 @@ void Turtle::HandleCollision(CollisionContext& collisionContext) {
     Animal::HandleCollision(collisionContext);
 
     if (collisionContext.IsCancelled()) {
-        // TODO Add IsFinished()
         return;
     }
 
     if (collisionContext.GetAttacker()->GetStrength() < 5) {
+        collisionContext.GetWorld().Log("[Turtle] Turtle at " + this->GetPosition().ToString() + " has evaded the " + collisionContext.GetAttacker()->GetType() + "!");
         collisionContext.Cancel();
         return;
     }

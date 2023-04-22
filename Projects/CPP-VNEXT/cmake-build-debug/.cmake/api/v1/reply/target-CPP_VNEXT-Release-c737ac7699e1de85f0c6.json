@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "MinSizeRel/CPP_VNEXT.exe"
+			"path" : "Release/CPP_VNEXT.exe"
 		},
 		{
-			"path" : "MinSizeRel/CPP_VNEXT.pdb"
+			"path" : "Release/CPP_VNEXT.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -38,7 +38,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD"
+					"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD"
 				},
 				{
 					"fragment" : "-std:c++17"
@@ -88,7 +88,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O1 /Ob1 /DNDEBUG -MD",
+				"fragment" : "/DWIN32 /D_WINDOWS /EHsc /O2 /Ob2 /DNDEBUG -MD",
 				"role" : "flags"
 			},
 			{
@@ -203,12 +203,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/Animal.cpp",
+			"path" : "src/Animals/Animal.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/Animal.h",
+			"path" : "src/Animals/Animal.h",
 			"sourceGroupIndex" : 1
 		},
 		{
@@ -280,12 +280,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/Plant.cpp",
+			"path" : "src/Plants/Plant.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "src/Plant.h",
+			"path" : "src/Plants/Plant.h",
 			"sourceGroupIndex" : 1
 		},
 		{

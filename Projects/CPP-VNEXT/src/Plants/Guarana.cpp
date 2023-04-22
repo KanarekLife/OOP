@@ -15,5 +15,6 @@ Organism* Guarana::GetNewOfType(Position&& position) {
 
 void Guarana::HandleCollision(CollisionContext& context) {
     context.GetAttacker()->IncreaseStrength(3);
+    context.GetWorld().Log("[Guarana] Guarana has been eaten by " + context.GetAttacker()->GetType() + " which increased its strength to " + std::to_string(context.GetAttacker()->GetStrength()) + " at " + this->GetPosition().ToString());
     context.KillHost();
 }
