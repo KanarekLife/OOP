@@ -38,3 +38,11 @@ bool Organism::IsAtLeastAsStrongAs(Organism* organism) const {
 int Organism::GetStrength() const {
     return this->strength;
 }
+
+void Organism::IncreaseStrength(int delta) {
+    if (delta < 1) {
+        throw std::exception("Delta cannot be under 1");
+    }
+
+    this->strength += delta;
+}

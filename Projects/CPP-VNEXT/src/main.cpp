@@ -5,6 +5,13 @@
 #include "Animals/Sheep.h"
 #include "Animals/Fox.h"
 #include "Animals/Turtle.h"
+#include "Animals/Antelope.h"
+#include "Plants/Grass.h"
+#include "Plants/Dandelion.h"
+#include "Plants/Guarana.h"
+#include "Plants/Nightshade.h"
+#include "Plants/PineBorscht.h"
+#include "Animals/Human.h"
 
 int main() {
     SetConsoleOutputCP(CP_UTF8);
@@ -19,13 +26,14 @@ int main() {
 
     World world(20, 20);
 
-    world.Add(new Sheep(Position(0,0)));
-    world.Add(new Turtle(Position(0, 1)));
+    world.Add(new Human(Position(0,0)));
+    world.Add(new Grass(Position(19, 19)));
+    //world.Add(new Antelope(Position(0, 1)));
+    //world.Add(new PineBorscht(Position(1, 1)));
 
     world.Draw();
 
     while(true) {
-        getchar();
         world.SimulateRound();
         world.Draw();
     }

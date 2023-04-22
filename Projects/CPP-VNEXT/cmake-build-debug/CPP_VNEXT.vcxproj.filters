@@ -31,6 +31,30 @@
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Turtle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Dandelion.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Guarana.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Nightshade.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\PineBorscht.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Human.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\World.h">
@@ -58,6 +82,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Turtle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Dandelion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Guarana.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Nightshade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\PineBorscht.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Human.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,6 +18,7 @@ public:
     Position& GetPosition();
     bool IsAtLeastAsStrongAs(Organism* organism) const;
     int GetStrength() const;
+    void IncreaseStrength(int delta);
     static bool Order(Organism* lhs, Organism* rhs);
 protected:
     Organism(int strength, int initiative, char symbol, Position&& initialPosition);

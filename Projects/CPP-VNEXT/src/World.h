@@ -15,6 +15,8 @@ public:
     bool Move(Position& from, Position& to);
     void Add(Organism* organism);
     void Kill(Organism* organism);
+    int GetNumberOfLivingOrganisms() const;
+    std::vector<Organism*>&& GetOrganismsAtNearbyPositions(Position& position, int distance = 1);
     std::optional<Position> GetNearbyPosition(Position& source, int distance = 1, bool empty = false) const;
     static std::mt19937 GetRng();
 private:

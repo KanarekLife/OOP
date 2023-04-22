@@ -34,6 +34,10 @@ void World::SimulateRound() {
 }
 
 bool World::Move(Position& from, Position& to) {
+    if (!IsPositionWithinWorld(to)) {
+        return false;
+    }
+
     Organism* host = this->map[to.GetX()][to.GetY()];
     if (host == nullptr) {
         this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
@@ -59,6 +63,12 @@ bool World::Move(Position& from, Position& to) {
             return false;
         }
 
+        if (context.HasAttackerWon()) {
+            this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
+            this->map[from.GetX()][from.GetY()] = nullptr;
+            return true;
+        }
+
         if (!context.IsHostKilled() && !context.IsAttackerKilled()) {
             // Fight
             if (attacker->IsAtLeastAsStrongAs(host)) {
@@ -72,6 +82,8 @@ bool World::Move(Position& from, Position& to) {
             }
         }
 
+        this->Kill(host);
+        this->Kill(attacker);
         return false;
     }
 }
@@ -131,13 +143,17 @@ std::mt19937 World::GetRng() {
 void World::Draw() {
     system("cls");
     SetCursorPos(0, 0);
-    for (const std::vector<Organism*>& column : this->map) {
-        for (Organism* organism : column) {
-            char symbol = organism == nullptr ? ' ' : organism->GetSymbol();
 
+    int n = this->map.size();
+    int m = this->map[0].size();
+
+    for (int i = n - 1; i >= 0; --i) {
+        for (int j = 0; j < m; ++j) {
+            Organism* organism = this->map[j][i];
+            char symbol = organism == nullptr ? ' ' : organism->GetSymbol();
             std::cout << symbol;
         }
-        std::cout << std::endl;
+        std::cout << '\n';
     }
 }
 
@@ -148,3 +164,34 @@ void World::Kill(Organism* organism) {
     this->toErase.emplace(organism);
 }
 
+int World::GetNumberOfLivingOrganisms() const {
+    return this->organisms.size();
+}
+
+std::vector<Organism*>&& World::GetOrganismsAtNearbyPositions(Position& source, int distance) {
+    std::vector<Position> possiblePositions = {
+            {source.GetX(), source.GetY() + distance},
+            {source.GetX() + distance, source.GetY() + distance},
+            {source.GetX() + distance, source.GetY()},
+            {source.GetX() + distance, source.GetY() - distance},
+            {source.GetX(), source.GetY() - distance},
+            {source.GetX() - distance, source.GetY() - distance},
+            {source.GetX() - distance, source.GetY()},
+            {source.GetX() - distance, source.GetY() + distance}
+    };
+    std::vector<Organism*> results = std::vector<Organism*>();
+    results.reserve(8);
+
+    for (Position pos : possiblePositions ) {
+        if (!IsPositionWithinWorld(pos)) {
+            continue;
+        }
+
+        Organism* host = this->map[pos.GetX()][pos.GetY()];
+        if (host != nullptr) {
+            results.emplace_back(host);
+        }
+    }
+
+    return std::move(results);
+}

@@ -15,6 +15,8 @@ public:
     bool IsAttackerKilled() const;
     void KillHost();
     bool IsHostKilled() const;
+    bool HasAttackerWon() const;
+    void AttackerHasWon();
     World& GetWorld() const;
     Organism* GetAttacker();
 private:
@@ -23,4 +25,5 @@ private:
     bool cancelled;
     bool killAttacker;
     bool killHost;
+    bool hasAttackerWon;
 };

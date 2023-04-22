@@ -1,7 +1,7 @@
 #include "CollisionContext.h"
 
 CollisionContext::CollisionContext(World& world, Organism* attacker): world(world), attacker(attacker),
-    cancelled(false), killAttacker(false), killHost(false) {}
+    cancelled(false), killAttacker(false), killHost(false), hasAttackerWon(false) {}
 
 void CollisionContext::Cancel() {
     this->cancelled = true;
@@ -33,4 +33,12 @@ void CollisionContext::KillAttacker() {
 
 void CollisionContext::KillHost() {
     this->killHost = true;
+}
+
+bool CollisionContext::HasAttackerWon() const {
+    return this->hasAttackerWon;
+}
+
+void CollisionContext::AttackerHasWon() {
+    this->hasAttackerWon = true;
 }

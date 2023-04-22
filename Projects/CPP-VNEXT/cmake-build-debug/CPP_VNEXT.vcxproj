@@ -320,6 +320,22 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Fox.h" />
     <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Turtle.cpp" />
     <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Turtle.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Antelope.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plant.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Grass.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Dandelion.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Dandelion.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Guarana.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Guarana.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Nightshade.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\Nightshade.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\PineBorscht.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Plants\PineBorscht.h" />
+    <ClCompile Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Human.cpp" />
+    <ClInclude Include="D:\Projects\OOP\Projects\CPP-VNEXT\src\Animals\Human.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="D:\Projects\OOP\Projects\CPP-VNEXT\cmake-build-debug\ZERO_CHECK.vcxproj">
