@@ -10,13 +10,14 @@ std::string PineBorscht::GetType() const { return PineBorscht::Type; }
 Organism* PineBorscht::GetNewOfType(Position&& position) { return new PineBorscht(std::move(position)); }
 
 void PineBorscht::HandleAction(World& world) {
-    std::vector<Organism*> x = world.GetOrganismsAtNearbyPositions(this->GetPosition());
-    for (Organism* organism : x) {
+    int counter = 0;
+    for (Organism* organism : world.GetOrganismsAtNearbyPositions(this->GetPosition())) {
         if (dynamic_cast<Animal*>(organism) != nullptr &&  organism->GetType() != "CyberSheep") { // TODO Fix when CyberSheep is implemented
             world.Kill(organism);
+            counter++;
         }
     }
-    world.Log("[PineBorscht] PineBorscht has killed " + std::to_string(x.size()) + " organisms at " + this->GetPosition().ToString());
+    world.Log("[PineBorscht] PineBorscht has killed " + std::to_string(counter) + " organisms at " + this->GetPosition().ToString());
     Plant::HandleAction(world);
 }
 

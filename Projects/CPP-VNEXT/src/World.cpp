@@ -17,6 +17,10 @@ World::World(int n, int m): running(true), round(0) {
 
 
 void World::SimulateRound() {
+    Log("================================");
+    Log("[World] Simulating round " + std::to_string(this->round));
+    Log("================================");
+
     std::sort(this->organisms.begin(), this->organisms.end(), Organism::Order);
 
     std::vector<Organism*> organismsCopy = this->organisms;
@@ -36,7 +40,7 @@ void World::SimulateRound() {
     }
 
     round++;
-    Log("[World] Simulated round " + std::to_string(this->round));
+    Log("");
 }
 
 bool World::Move(Position& from, Position& to) {
@@ -202,6 +206,11 @@ void World::Draw() {
         std::cout << '\t' << *iterator << std::endl;
         iterator++;
     }
+
+    std::cout << "Legend:" << std::endl;
+    std::cout << "Movement: w,s,a,d" << std::endl;
+    std::cout << "Special Power: j" << std::endl;
+    std::cout << "End game: ESC" << std::endl;
 }
 
 void World::Kill(Organism* organism) {
@@ -289,7 +298,7 @@ std::vector<Position> World::GetRandomPointsWithinWorld(int numberOfPositions) c
 
 void World::Log(std::string&& info) {
     this->logs.push_back(std::move(info));
-    while(this->logs.size() > 25) {
+    while(this->logs.size() > this->map[0].size()) {
         this->logs.pop_front();
     }
 }

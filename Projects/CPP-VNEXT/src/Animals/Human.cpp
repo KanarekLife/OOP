@@ -53,11 +53,12 @@ void Human::HandleAction(World& world) {
 void Human::HandleCollision(CollisionContext& collisionContext) {
     if (this->isSpecialPowerActive) {
         World& world = collisionContext.GetWorld();
-        std::vector<Organism*> x = world.GetOrganismsAtNearbyPositions(GetPosition());
-        for (Organism* organism : x) {
+        int counter = 0;
+        for (Organism* organism : world.GetOrganismsAtNearbyPositions(GetPosition())) {
             world.Kill(organism);
+            counter++;
         }
-        world.Log("[Całopalenie] Human has killed " + std::to_string(x.size()) + " organisms with the usage of his special power");
+        world.Log("[Całopalenie] Human has killed " + std::to_string(counter) + " organisms with the usage of his special power");
     }
 }
 
