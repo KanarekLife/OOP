@@ -40,6 +40,9 @@ void Human::HandleAction(World& world) {
                 inputEntered = true;
                 TryToActivateSpecialPower();
                 break;
+            case ' ':
+                inputEntered = true;
+                break;
             case 27: // ESC
                 world.Stop();
                 inputEntered = true;

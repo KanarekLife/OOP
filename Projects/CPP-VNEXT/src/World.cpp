@@ -209,8 +209,9 @@ void World::Draw() {
 
     std::cout << "Legend:" << std::endl;
     std::cout << "Movement: w,s,a,d" << std::endl;
+    std::cout << "Wait: <spacebar>" << std::endl;
     std::cout << "Special Power: j" << std::endl;
-    std::cout << "End game: ESC" << std::endl;
+    std::cout << "End (human): ESC" << std::endl;
 }
 
 void World::Kill(Organism* organism) {
