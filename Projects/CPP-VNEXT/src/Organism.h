@@ -16,7 +16,6 @@ public:
     virtual std::string GetType() const = 0;
     virtual Organism* GetNewOfType(Position&& position) = 0;
     Position& GetPosition();
-    bool IsAtLeastAsStrongAs(Organism* organism) const;
     int GetStrength() const;
     void IncreaseStrength(int delta);
     static bool Order(Organism* lhs, Organism* rhs);

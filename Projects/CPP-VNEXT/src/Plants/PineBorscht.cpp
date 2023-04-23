@@ -17,7 +17,9 @@ void PineBorscht::HandleAction(World& world) {
             counter++;
         }
     }
-    world.Log("PineBorscht", "PineBorscht has killed " + std::to_string(counter) + " organisms at " + this->GetPosition().ToString());
+    if (counter > 0) {
+        world.Log("PineBorscht", "PineBorscht has killed " + std::to_string(counter) + " organisms at " + this->GetPosition().ToString(), 196);
+    }
     Plant::HandleAction(world);
 }
 

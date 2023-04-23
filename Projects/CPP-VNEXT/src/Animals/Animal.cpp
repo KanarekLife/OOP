@@ -18,7 +18,7 @@ void Animal::HandleCollision(CollisionContext& collisionContext) {
     if (collisionContext.GetAttacker()->GetType() == this->GetType()) {
         std::optional<Position> pos = collisionContext.GetWorld().GetNearbyPosition(this->GetPosition(), 1, true);
         if (pos) {
-            collisionContext.GetWorld().Log("Breeding", this->GetType() + " has appeared at " + (*pos).ToString());
+            collisionContext.GetWorld().Log("Breeding", this->GetType() + " has appeared at " + (*pos).ToString(), 82);
             Organism* organism = this->GetNewOfType(std::move(*pos));
             collisionContext.GetWorld().Add(organism);
         }

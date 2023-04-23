@@ -3,7 +3,7 @@
 #include "../World.h"
 
 Human::Human(Position&& position) : Animal(5, 4, "\033[38;5;226mH\033[m", std::move(position)) {
-    this->specialPowerTimer = 5;
+    this->specialPowerTimer = 0;
     this->isSpecialPowerActive = false;
 }
 
@@ -19,6 +19,7 @@ Organism* Human::GetNewOfType(Position&& position) {
 
 void Human::HandleAction(World& world) {
     this->SpecialPowerTick();
+    world.Draw();
 
     bool inputEntered = false;
     while(!inputEntered && world.IsRunning()) {
@@ -37,8 +38,8 @@ void Human::HandleAction(World& world) {
                 inputEntered = this->TryToMove(world, GetPosition().WithOffset(-1, 0));
                 break;
             case 'j':
-                inputEntered = true;
                 TryToActivateSpecialPower();
+                world.Draw();
                 break;
             case ' ':
                 inputEntered = true;
@@ -61,6 +62,7 @@ void Human::HandleCollision(CollisionContext& collisionContext) {
             world.Kill(organism);
             counter++;
         }
+        collisionContext.Cancel();
         world.Log("Całopalenie", "Human has killed " + std::to_string(counter) + " organisms with the usage of his special power", 196);
     }
 }

@@ -31,10 +31,6 @@ std::string Organism::GetSymbol() const {
     return this->symbol;
 }
 
-bool Organism::IsAtLeastAsStrongAs(Organism* organism) const {
-    return this->strength >= organism->strength;
-}
-
 int Organism::GetStrength() const {
     return this->strength;
 }

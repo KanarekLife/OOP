@@ -52,68 +52,52 @@ bool World::Move(Position& from, Position& to) {
         return false;
     }
 
-    Organism* host = this->map[to.GetX()][to.GetY()];
-    if (host == nullptr) {
+    Organism* defender = this->map[to.GetX()][to.GetY()];
+
+    if (defender == nullptr) {
         MoveOnMap(from, to);
         return true;
     }else {
         Organism* attacker = this->map[from.GetX()][from.GetY()];
-        CollisionContext context = CollisionContext(*this, attacker);
-        host->HandleCollision(context);
+        CollisionContext context = CollisionContext(*this, attacker, defender);
+        defender->HandleCollision(context);
 
-        if (context.IsCancelled()) {
-            return false;
-        }
-
-        if (context.IsHostKilled() && !context.IsAttackerKilled()) {
-            Log("Fight", attacker->GetType() + " has defeated " + host->GetType() + " while attacking " + to.ToString(), 160);
-            this->Kill(host);
-            MoveOnMap(from, to);
-            return true;
-        }
-
-        if (!context.IsHostKilled() && context.IsAttackerKilled()) {
-            Log("Fight", host->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString(), 1);
-            this->Kill(attacker);
-            return false;
-        }
-
-        if (context.HasDefenderEvaded()) {
-            Log("Fight", host->GetType() + " has evaded " + attacker->GetType() + " at " + to.ToString(), 2);
-            MoveOnMap(from, to);
-            return true;
-        }
-
-        if (!context.IsHostKilled() && !context.IsAttackerKilled()) {
-            // Fight
-            if (attacker->IsAtLeastAsStrongAs(host)) {
-                if (dynamic_cast<Plant*>(host) != nullptr) {
-                    Log("Eating", attacker->GetType() + " has eaten " + host->GetType() + " at " + to.ToString(), 178);
+        switch (context.GetResult()) {
+            case Cancelled:
+                return false;
+            case AttackerWon:
+                if (dynamic_cast<Plant*>(defender) != nullptr) {
+                    Log("Eating", attacker->GetType() + " has eaten " + defender->GetType() + " at " + to.ToString(), 178);
                 }else {
-                    Log("Fight", attacker->GetType() + " has defeated " + host->GetType() + " while attacking " + to.ToString(), 160);
+                    Log("Fight", attacker->GetType() + " has defeated " + defender->GetType() + " while attacking " + to.ToString(), 160);
                 }
-                this->Kill(host);
+                this->Kill(defender);
                 MoveOnMap(from, to);
                 return true;
-            }else {
-                if (dynamic_cast<Plant*>(host) != nullptr) {
-                    Log("Eating" , attacker->GetType() + " has killed by eating " + host->GetType() + " at " + to.ToString(), 201);
+            case DefenderWon:
+                if (dynamic_cast<Plant*>(defender) != nullptr) {
+                    Log("Eating" , attacker->GetType() + " has killed by eating " + defender->GetType() + " at " + to.ToString(), 201);
                 }else {
-                    Log("Fight", host->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString(), 1);
+                    Log("Fight", defender->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString(), 1);
                 }
                 this->Kill(attacker);
                 return false;
-            }
+            case DefenderEvaded:
+                Log("Fight", defender->GetType() + " has evaded " + attacker->GetType() + " at " + to.ToString(), 2);
+                MoveOnMap(from, to);
+                return true;
+            case BothDied:
+                if (dynamic_cast<Plant*>(defender) != nullptr) {
+                    Log("Eating" , attacker->GetType() + " has been killed by eating " + defender->GetType() + " at " + to.ToString(), 201);
+                }else {
+                    Log("Fight", defender->GetType() + " has died alongside " + attacker->GetType() + " while fighting at " + to.ToString(), 1);
+                }
+                this->Kill(defender);
+                this->Kill(attacker);
+                return false;
         }
 
-        if (dynamic_cast<Plant*>(host) != nullptr) {
-            Log("Eating" , attacker->GetType() + " has been killed by eating " + host->GetType() + " at " + to.ToString(), 201);
-        }else {
-            Log("Fight", host->GetType() + " has died alongside " + attacker->GetType() + " while fighting at " + to.ToString(), 1);
-        }
-        this->Kill(host);
-        this->Kill(attacker);
-        return false;
+        throw std::exception("Should never happen");
     }
 }
 
@@ -236,7 +220,7 @@ int World::GetNumberOfLivingOrganisms() const {
     return this->organisms.size();
 }
 
-std::vector<Organism*>&& World::GetOrganismsAtNearbyPositions(Position& source, int distance) {
+std::vector<Organism*> World::GetOrganismsAtNearbyPositions(Position& source, int distance) {
     std::vector<Position> possiblePositions = {
             {source.GetX(), source.GetY() + distance},
             {source.GetX() + distance, source.GetY() + distance},
@@ -261,7 +245,7 @@ std::vector<Organism*>&& World::GetOrganismsAtNearbyPositions(Position& source, 
         }
     }
 
-    return std::move(results);
+    return results;
 }
 
 void World::Stop() {

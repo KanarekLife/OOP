@@ -6,24 +6,37 @@
 class World;
 class Organism;
 
+enum CollisionResult {
+    AttackerWon,
+    DefenderWon,
+    BothDied,
+    DefenderEvaded,
+    Cancelled
+};
+
 class CollisionContext {
 public:
-    CollisionContext(World& world, Organism* attacker);
+    CollisionContext(World& world, Organism* attacker, Organism* defender);
+
     void Cancel();
     bool IsCancelled() const;
+
     void KillAttacker();
-    bool IsAttackerKilled() const;
     void KillHost();
-    bool IsHostKilled() const;
-    bool HasDefenderEvaded() const;
-    void DefenderEvaded();
+    void DefenderHasEvaded();
+
+    CollisionResult GetResult() const;
+
     World& GetWorld() const;
     Organism* GetAttacker();
 private:
-    Organism* attacker;
-    World& world;
     bool cancelled;
-    bool killAttacker;
-    bool killHost;
+    bool isAttackerKilled;
+    bool isHostKilled;
     bool hasDefenderEvaded;
+
+    Organism* attacker;
+    Organism* defender;
+
+    World& world;
 };

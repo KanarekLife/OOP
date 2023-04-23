@@ -36,7 +36,7 @@ void Antelope::HandleCollision(CollisionContext& collisionContext) {
         std::optional<Position> newPosition = collisionContext.GetWorld().GetNearbyPosition(this->GetPosition(), 1, true);
         if (newPosition && collisionContext.GetWorld().Move(this->GetPosition(), *newPosition)) {
             this->SetPosition(std::move(*newPosition));
-            collisionContext.DefenderEvaded();
+            collisionContext.DefenderHasEvaded();
         }
         return;
     }

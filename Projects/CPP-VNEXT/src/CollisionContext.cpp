@@ -1,7 +1,7 @@
 #include "CollisionContext.h"
 
-CollisionContext::CollisionContext(World& world, Organism* attacker): world(world), attacker(attacker),
-                                                                      cancelled(false), killAttacker(false), killHost(false), hasDefenderEvaded(false) {}
+CollisionContext::CollisionContext(World& world, Organism* attacker, Organism* defender): world(world), attacker(attacker), defender(defender),
+                                                                      cancelled(false), isAttackerKilled(false), isHostKilled(false), hasDefenderEvaded(false) {}
 
 void CollisionContext::Cancel() {
     this->cancelled = true;
@@ -19,26 +19,42 @@ bool CollisionContext::IsCancelled() const {
     return this->cancelled;
 }
 
-bool CollisionContext::IsAttackerKilled() const {
-    return this->killAttacker;
-}
-
-bool CollisionContext::IsHostKilled() const {
-    return this->killHost;
-}
-
 void CollisionContext::KillAttacker() {
-    this->killAttacker = true;
+    this->isAttackerKilled = true;
 }
 
 void CollisionContext::KillHost() {
-    this->killHost = true;
+    this->isHostKilled = true;
 }
 
-bool CollisionContext::HasDefenderEvaded() const {
-    return this->hasDefenderEvaded;
-}
-
-void CollisionContext::DefenderEvaded() {
+void CollisionContext::DefenderHasEvaded() {
     this->hasDefenderEvaded = true;
+}
+
+CollisionResult CollisionContext::GetResult() const {
+    if (cancelled) {
+        return Cancelled;
+    }
+
+    if (this->isHostKilled && !this->isAttackerKilled) {
+        return AttackerWon;
+    }
+
+    if (!this->isHostKilled && this->isAttackerKilled) {
+        return DefenderWon;
+    }
+
+    if (this->hasDefenderEvaded) {
+        return DefenderEvaded;
+    }
+
+    if (!this->isHostKilled) {
+        if (attacker->GetStrength() >= defender->GetStrength()) {
+            return AttackerWon;
+        }else {
+            return DefenderWon;
+        }
+    }
+
+    return BothDied;
 }

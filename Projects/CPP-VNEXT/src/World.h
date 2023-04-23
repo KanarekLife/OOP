@@ -17,7 +17,7 @@ public:
     void Add(Organism* organism);
     void Kill(Organism* organism);
     int GetNumberOfLivingOrganisms() const;
-    std::vector<Organism*>&& GetOrganismsAtNearbyPositions(Position& position, int distance = 1);
+    std::vector<Organism*> GetOrganismsAtNearbyPositions(Position& position, int distance = 1);
     std::optional<Position> GetNearbyPosition(Position& source, int distance = 1, bool empty = false) const;
     std::vector<Position> GetRandomPointsWithinWorld(int numberOfPositions) const;
     static std::mt19937 GetRng();
