@@ -2,7 +2,7 @@
 #include "Fox.h"
 #include "../World.h"
 
-Fox::Fox(Position&& position) : Animal(3, 7, 'F', std::move(position)) {
+Fox::Fox(Position&& position) : Animal(3, 7, "\033[38;5;208mF\033[m", std::move(position)) {
 
 }
 

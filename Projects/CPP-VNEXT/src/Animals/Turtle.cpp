@@ -1,7 +1,7 @@
 #include "Turtle.h"
 #include "../World.h"
 
-Turtle::Turtle(Position&& position) : Animal(2, 1, 'T', std::move(position)) {
+Turtle::Turtle(Position&& position) : Animal(2, 1, "\033[38;5;10mT\033[m", std::move(position)) {
 
 }
 
@@ -32,7 +32,7 @@ void Turtle::HandleCollision(CollisionContext& collisionContext) {
     }
 
     if (collisionContext.GetAttacker()->GetStrength() < 5) {
-        collisionContext.GetWorld().Log("[Turtle] Turtle at " + this->GetPosition().ToString() + " has evaded the " + collisionContext.GetAttacker()->GetType() + "!");
+        collisionContext.GetWorld().Log("Turtle", "Turtle at " + this->GetPosition().ToString() + " has evaded the " + collisionContext.GetAttacker()->GetType() + "!", 11);
         collisionContext.Cancel();
         return;
     }

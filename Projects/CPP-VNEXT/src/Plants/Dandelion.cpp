@@ -1,7 +1,7 @@
 #include "Dandelion.h"
 #include "../World.h"
 
-Dandelion::Dandelion(Position&& position) : Plant(0, 'D', std::move(position)) {}
+Dandelion::Dandelion(Position&& position) : Plant(0, "\033[38;5;11m*\033[m", std::move(position)) {}
 
 const std::string Dandelion::Type = "Dandelion";
 

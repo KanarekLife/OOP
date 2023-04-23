@@ -1,6 +1,6 @@
 #include "Grass.h"
 
-Grass::Grass(Position&& position) : Plant(0, '^', std::move(position)) {
+Grass::Grass(Position&& position) : Plant(0, "\033[38;5;28m^\033[m", std::move(position)) {
 
 }
 

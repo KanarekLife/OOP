@@ -7,5 +7,5 @@ public:
     void HandleAction(World &world) override;
     void HandleCollision(CollisionContext &context) override;
 protected:
-    Plant(int strength, char symbol, Position&& initialPosition);
+    Plant(int strength, std::string symbol, Position&& initialPosition);
 };

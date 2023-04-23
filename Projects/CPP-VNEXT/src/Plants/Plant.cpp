@@ -2,7 +2,7 @@
 #include "../World.h"
 #include <random>
 
-Plant::Plant(int strength, char symbol, Position&& initialPosition) : Organism(strength, 0, symbol, std::move(initialPosition)) {
+Plant::Plant(int strength, std::string symbol, Position&& initialPosition) : Organism(strength, 0, symbol, std::move(initialPosition)) {
 
 }
 
@@ -13,7 +13,7 @@ void Plant::HandleAction(World& world) {
     if (dist(rng) < 0.45) {
         std::optional<Position> position = world.GetNearbyPosition(this->GetPosition(), 1, true);
         if (position) {
-            world.Log("[Seeding] " + this->GetType() + " has appeared at " + (*position).ToString());
+            world.Log("Seeding", this->GetType() + " has appeared at " + (*position).ToString());
             world.Add(this->GetNewOfType(std::move(*position)));
         }
     }

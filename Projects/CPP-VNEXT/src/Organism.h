@@ -10,7 +10,7 @@ class CollisionContext;
 class Organism {
 public:
     void MakeOlder();
-    char GetSymbol() const;
+    std::string GetSymbol() const;
     virtual void HandleAction(World& world) = 0;
     virtual void HandleCollision(CollisionContext& context) = 0;
     virtual std::string GetType() const = 0;
@@ -21,12 +21,12 @@ public:
     void IncreaseStrength(int delta);
     static bool Order(Organism* lhs, Organism* rhs);
 protected:
-    Organism(int strength, int initiative, char symbol, Position&& initialPosition);
+    Organism(int strength, int initiative, std::string symbol, Position&& initialPosition);
     void SetPosition(Position&& newPosition);
 private:
     int strength;
     int initiative;
     int age;
-    char symbol;
+    std::string symbol;
     Position position;
 };

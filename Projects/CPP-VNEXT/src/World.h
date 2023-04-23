@@ -23,10 +23,11 @@ public:
     static std::mt19937 GetRng();
     bool IsRunning() const;
     void Stop();
-    void Log(std::string&& info);
+    void Log(std::string&& source, std::string&& info, int color = 15);
 private:
     bool IsPositionEmpty(Position& position) const;
     bool IsPositionWithinWorld(Position& position) const;
+    void MoveOnMap(Position& from, Position& to);
     std::vector<std::vector<Organism*>> map;
     std::vector<Organism*> organisms;
     Human* human;

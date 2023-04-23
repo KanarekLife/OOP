@@ -1,7 +1,7 @@
 #include "Guarana.h"
 #include "../World.h"
 
-Guarana::Guarana(Position&& position) : Plant(0, 'G', std::move(position)) {}
+Guarana::Guarana(Position&& position) : Plant(0, "\033[38;5;160m&\033[m", std::move(position)) {}
 
 const std::string Guarana::Type = "Guarana";
 
@@ -15,6 +15,5 @@ Organism* Guarana::GetNewOfType(Position&& position) {
 
 void Guarana::HandleCollision(CollisionContext& context) {
     context.GetAttacker()->IncreaseStrength(3);
-    context.GetWorld().Log("[Guarana] Guarana has been eaten by " + context.GetAttacker()->GetType() + " which increased its strength to " + std::to_string(context.GetAttacker()->GetStrength()) + " at " + this->GetPosition().ToString());
     context.KillHost();
 }

@@ -2,7 +2,7 @@
 #include "Human.h"
 #include "../World.h"
 
-Human::Human(Position&& position) : Animal(5, 4, 'H', std::move(position)) {
+Human::Human(Position&& position) : Animal(5, 4, "\033[38;5;226mH\033[m", std::move(position)) {
     this->specialPowerTimer = 5;
     this->isSpecialPowerActive = false;
 }
@@ -61,7 +61,7 @@ void Human::HandleCollision(CollisionContext& collisionContext) {
             world.Kill(organism);
             counter++;
         }
-        world.Log("[Całopalenie] Human has killed " + std::to_string(counter) + " organisms with the usage of his special power");
+        world.Log("Całopalenie", "Human has killed " + std::to_string(counter) + " organisms with the usage of his special power", 196);
     }
 }
 

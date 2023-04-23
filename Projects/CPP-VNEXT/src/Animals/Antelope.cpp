@@ -1,7 +1,7 @@
 #include "Antelope.h"
 #include "../World.h"
 
-Antelope::Antelope(Position&& position) : Animal(4, 4, 'A', std::move(position)) {
+Antelope::Antelope(Position&& position) : Animal(4, 4, "\033[38;5;219mA\033[m", std::move(position)) {
 
 }
 
@@ -35,9 +35,8 @@ void Antelope::HandleCollision(CollisionContext& collisionContext) {
     if (dist(rng) <= 0.5) {
         std::optional<Position> newPosition = collisionContext.GetWorld().GetNearbyPosition(this->GetPosition(), 1, true);
         if (newPosition && collisionContext.GetWorld().Move(this->GetPosition(), *newPosition)) {
-            collisionContext.GetWorld().Log("[Antelope] Antelope has evaded the attack from " + collisionContext.GetAttacker()->GetType() + " at " + this->GetPosition().ToString() + " by jumping to " + (*newPosition).ToString());
             this->SetPosition(std::move(*newPosition));
-            collisionContext.AttackerHasWon();
+            collisionContext.DefenderEvaded();
         }
         return;
     }

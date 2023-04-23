@@ -19,8 +19,15 @@ int main() {
 
     SetConsoleTitle("Stanisław Nieradko [193044]");
 
+    HANDLE handleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD consoleMode;
+    GetConsoleMode( handleOut , &consoleMode);
+    consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    consoleMode |= DISABLE_NEWLINE_AUTO_RETURN;
+    SetConsoleMode( handleOut , consoleMode);
+
     int n, m;
-    std::cout << "Enter dimenstions of the world:" << std::endl;
+    std::cout << "Enter dimensions of the world (ex. \"20 20\"):" << std::endl;
     std::cin >> n >> m;
 
     World world(n, m);

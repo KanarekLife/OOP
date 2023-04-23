@@ -7,5 +7,5 @@ public:
     void HandleAction(World& world) override;
     void HandleCollision(CollisionContext& collisionContext) override;
 protected:
-    Animal(int strength, int initiative, char symbol, Position&& initialPosition);
+    Animal(int strength, int initiative, std::string symbol, Position&& initialPosition);
 };

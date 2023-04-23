@@ -1,6 +1,6 @@
 #include "Wolf.h"
 
-Wolf::Wolf(Position&& position) : Animal(9, 5, 'W', std::move(position)) {}
+Wolf::Wolf(Position&& position) : Animal(9, 5, "\033[38;5;246mW\033[m", std::move(position)) {}
 
 const std::string Wolf::Type = "Wolf";
 

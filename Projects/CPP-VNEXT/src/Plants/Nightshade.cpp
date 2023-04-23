@@ -1,7 +1,7 @@
 #include "Nightshade.h"
 #include "../World.h"
 
-Nightshade::Nightshade(Position&& position) : Plant(99, 'X', std::move(position)) {}
+Nightshade::Nightshade(Position&& position) : Plant(99, "\033[38;5;57m#\033[m", std::move(position)) {}
 
 const std::string Nightshade::Type = "Nightshade";
 
@@ -14,7 +14,6 @@ Organism* Nightshade::GetNewOfType(Position&& position) {
 }
 
 void Nightshade::HandleCollision(CollisionContext& context) {
-    context.GetWorld().Log("[Nightshade] Nightshade was eaten by " + context.GetAttacker()->GetType() + " which killed it at " + this->GetPosition().ToString());
     context.KillHost();
     context.KillAttacker();
 }

@@ -17,9 +17,9 @@ World::World(int n, int m): running(true), round(0) {
 
 
 void World::SimulateRound() {
-    Log("================================");
-    Log("[World] Simulating round " + std::to_string(this->round));
-    Log("================================");
+    Log("World", "================================");
+    Log("World", "Simulating round " + std::to_string(this->round));
+    Log("World", "================================");
 
     std::sort(this->organisms.begin(), this->organisms.end(), Organism::Order);
 
@@ -40,7 +40,11 @@ void World::SimulateRound() {
     }
 
     round++;
-    Log("");
+}
+
+void World::MoveOnMap(Position& from, Position& to) {
+    this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
+    this->map[from.GetX()][from.GetY()] = nullptr;
 }
 
 bool World::Move(Position& from, Position& to) {
@@ -50,12 +54,10 @@ bool World::Move(Position& from, Position& to) {
 
     Organism* host = this->map[to.GetX()][to.GetY()];
     if (host == nullptr) {
-        this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
-        this->map[from.GetX()][from.GetY()] = nullptr;
+        MoveOnMap(from, to);
         return true;
     }else {
         Organism* attacker = this->map[from.GetX()][from.GetY()];
-
         CollisionContext context = CollisionContext(*this, attacker);
         host->HandleCollision(context);
 
@@ -64,20 +66,21 @@ bool World::Move(Position& from, Position& to) {
         }
 
         if (context.IsHostKilled() && !context.IsAttackerKilled()) {
+            Log("Fight", attacker->GetType() + " has defeated " + host->GetType() + " while attacking " + to.ToString(), 160);
             this->Kill(host);
-            this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
-            this->map[from.GetX()][from.GetY()] = nullptr;
+            MoveOnMap(from, to);
             return true;
         }
 
         if (!context.IsHostKilled() && context.IsAttackerKilled()) {
+            Log("Fight", host->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString(), 1);
             this->Kill(attacker);
             return false;
         }
 
-        if (context.HasAttackerWon()) {
-            this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
-            this->map[from.GetX()][from.GetY()] = nullptr;
+        if (context.HasDefenderEvaded()) {
+            Log("Fight", host->GetType() + " has evaded " + attacker->GetType() + " at " + to.ToString(), 2);
+            MoveOnMap(from, to);
             return true;
         }
 
@@ -85,25 +88,29 @@ bool World::Move(Position& from, Position& to) {
             // Fight
             if (attacker->IsAtLeastAsStrongAs(host)) {
                 if (dynamic_cast<Plant*>(host) != nullptr) {
-                    Log("[Eating] " + attacker->GetType() + " has eaten " + host->GetType() + " at " + to.ToString());
+                    Log("Eating", attacker->GetType() + " has eaten " + host->GetType() + " at " + to.ToString(), 178);
                 }else {
-                    Log("[Fight] " + attacker->GetType() + " has defeated " + host->GetType() + " while attacking " + to.ToString());
+                    Log("Fight", attacker->GetType() + " has defeated " + host->GetType() + " while attacking " + to.ToString(), 160);
                 }
                 this->Kill(host);
-                this->map[to.GetX()][to.GetY()] = this->map[from.GetX()][from.GetY()];
-                this->map[from.GetX()][from.GetY()] = nullptr;
+                MoveOnMap(from, to);
                 return true;
             }else {
                 if (dynamic_cast<Plant*>(host) != nullptr) {
-                    Log("[Eating] " + attacker->GetType() + " has killed by eating " + host->GetType() + " at " + to.ToString());
+                    Log("Eating" , attacker->GetType() + " has killed by eating " + host->GetType() + " at " + to.ToString(), 201);
                 }else {
-                    Log("[Fight] " + host->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString());
+                    Log("Fight", host->GetType() + " has defeated " + attacker->GetType() + " while defending at " + to.ToString(), 1);
                 }
                 this->Kill(attacker);
                 return false;
             }
         }
 
+        if (dynamic_cast<Plant*>(host) != nullptr) {
+            Log("Eating" , attacker->GetType() + " has been killed by eating " + host->GetType() + " at " + to.ToString(), 201);
+        }else {
+            Log("Fight", host->GetType() + " has died alongside " + attacker->GetType() + " while fighting at " + to.ToString(), 1);
+        }
         this->Kill(host);
         this->Kill(attacker);
         return false;
@@ -188,7 +195,7 @@ void World::Draw() {
     for (int i = n - 1; i >= 0; --i) {
         for (int j = 0; j < m; ++j) {
             Organism* organism = this->map[j][i];
-            char symbol = organism == nullptr ? ' ' : organism->GetSymbol();
+            std::string symbol = organism == nullptr ? " " : organism->GetSymbol();
             std::cout << symbol;
         }
         if (iterator != this->logs.end()) {
@@ -259,7 +266,7 @@ std::vector<Organism*>&& World::GetOrganismsAtNearbyPositions(Position& source, 
 
 void World::Stop() {
     this->running = false;
-    Log("[World] Human died. Game over.");
+    Log("World", "Human died. Game over.", 9);
 }
 
 bool World::IsRunning() const {
@@ -284,7 +291,7 @@ std::vector<Position> World::GetRandomPointsWithinWorld(int numberOfPositions) c
             pos = Position(distX(rng), distY(rng));
             bool noRepetitionsFound = true;
             for (const Position existingPos : results) {
-                if (pos.GetX() == existingPos.GetX() && pos.GetY() == existingPos.GetY()) {
+                if (pos.Equals(existingPos)) {
                     noRepetitionsFound = false;
                     break;
                 }
@@ -297,8 +304,8 @@ std::vector<Position> World::GetRandomPointsWithinWorld(int numberOfPositions) c
     return results;
 }
 
-void World::Log(std::string&& info) {
-    this->logs.push_back(std::move(info));
+void World::Log(std::string&& source, std::string&& info, int color) {
+    this->logs.push_back("[" + std::move(source) + "] \033[38;5;" + std::to_string(color) + "m" + std::move(info) + "\033[m");
     while(this->logs.size() > this->map[0].size()) {
         this->logs.pop_front();
     }

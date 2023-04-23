@@ -1,6 +1,6 @@
 #include "Sheep.h"
 
-Sheep::Sheep(Position&& position) : Animal(4, 4, 'S', std::move(position)) {
+Sheep::Sheep(Position&& position) : Animal(4, 4, "\033[38;5;231mS\033[m", std::move(position)) {
 
 }
 
