@@ -2,10 +2,6 @@
 
 Position::Position(int x, int y): x(x), y(y) {}
 
-Position Position::WithOffset(int dx, int dy) const {
-    return {this->x + dx, this->y + dy};
-}
-
 int Position::GetX() const {
     return this->x;
 }
@@ -13,3 +9,18 @@ int Position::GetX() const {
 int Position::GetY() const {
     return this->y;
 }
+
+Position Position::WithOffset(int dx, int dy) const {
+    return Position(this->x + dx, this->y + dy);
+}
+
+std::string Position::ToString() const {
+    return "(" + std::to_string(this->x) + ", " + std::to_string(this->y) + ")";
+}
+
+bool Position::Equals(const Position& position) const {
+    return position.x == x && position.y == y;
+}
+
+
+

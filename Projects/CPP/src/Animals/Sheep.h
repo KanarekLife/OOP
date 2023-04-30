@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../Animal.h"
+#include "Animal.h"
 
-class Sheep : Animal {
+class Sheep : public Animal {
 public:
-    explicit Sheep(Position&& initialPosition);
+    explicit Sheep(Position&& position);
     static const std::string Type;
     std::string GetType() const override;
     Organism* GetNewOfType(Position&& position) override;
