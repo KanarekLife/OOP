@@ -1,5 +1,0 @@
-C:\Users\KanarekLife\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\231.8109.222\bin\cmake\win\x64\bin\cmake.exe -G "Visual Studio 17 2022" -S D:\Projects\OOP\Projects\CPP-VNEXT -B D:\Projects\OOP\Projects\CPP-VNEXT\cmake-build-debug
--- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22621.
--- Configuring done
--- Generating done
--- Build files have been written to: D:/Projects/OOP/Projects/CPP-VNEXT/cmake-build-debug
