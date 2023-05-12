@@ -1,12 +1,11 @@
 package com.nieradko.worldsim.controllers;
 
+import com.nieradko.worldsim.core.HexPosition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -15,7 +14,7 @@ public class MainController {
     final int GAP = 0;
 
     @FXML
-    public VBox map;
+    public HBox map;
     @FXML
     public VBox window;
     @FXML
@@ -27,6 +26,17 @@ public class MainController {
         int M = 20;
 
         drawHexMap(N, M);
+
+        var position = new HexPosition(3, 3);
+        getTile(position.getX(), position.getY()).setStyle("-fx-background-color: red;");
+        position.getAllNearbyPosition(2).forEach(e -> {
+            var tile = getTile(((HexPosition)e).getX(), ((HexPosition)e).getY());
+            tile.setStyle("-fx-background-color: yellow");
+        });
+    }
+
+    private VBox getTile(int x, int y) {
+        return (VBox)((VBox)map.getChildren().get(y)).getChildren().get(x);
     }
 
     public void handleAboutButton() {
@@ -66,27 +76,28 @@ public class MainController {
     private void drawHexMap(int n, int m) {
         final double TILE_SIZE = 60;
         final double HSPACING = (TILE_SIZE / 3) + 8 + (2 * GAP);
-        final double VSPACING = ((TILE_SIZE / 2) + 1) * -1 + GAP;
-        final double PADDING = ((TILE_SIZE / 3) * 2) + 4 + GAP;
+        final double VSPACING = ((TILE_SIZE / 4)) * -1 + GAP;
+        final double PADDING = ((TILE_SIZE / 3) * 2) - 10  + GAP;
 
         map.getChildren().clear();
         map.setSpacing(VSPACING);
-        for (var i = 0; i < m; i++) {
-            var row = new HBox();
-            row.setSpacing(HSPACING);
+        for (var i = 0; i < n; i++) {
+            var column = new VBox();
             if (i % 2 != 0) {
-                row.setPadding(new Insets(0, 0, 0, PADDING));
+                column.setPadding(new Insets(PADDING, 0, 0, 0));
             }
-            for (var j = 0; j < n; j++) {
+            for (var j = 0; j < m; j++) {
                 var tile = new VBox();
                 tile.getStyleClass().add("hex-tile");
                 tile.setMinWidth(TILE_SIZE);
                 tile.setMaxWidth(TILE_SIZE);
                 tile.setMinHeight(TILE_SIZE);
                 tile.setMaxHeight(TILE_SIZE);
-                row.getChildren().add(tile);
+                tile.setAlignment(Pos.CENTER);
+                tile.getChildren().add(new Label(String.format("(%d, %d)", j, i)));
+                column.getChildren().add(tile);
             }
-            map.getChildren().add(row);
+            map.getChildren().add(column);
         }
     }
 }

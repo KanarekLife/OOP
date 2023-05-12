@@ -30,7 +30,7 @@
     <HBox>
         <VBox>
             <ScrollPane>
-                <VBox fx:id="map" />
+                <HBox fx:id="map" />
             </ScrollPane>
             <VBox minHeight="100">
                 <Label>Test</Label>
