@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.nieradko.worldsim.controllers.MainController"
+      prefHeight="400.0" prefWidth="600.0" fx:id="window">
+    <stylesheets>
+        <URL value="@../css/hexmap.css"/>
+    </stylesheets>
+    <MenuBar>
+        <Menu text="Game">
+            <MenuItem text="New"/>
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+            <MenuItem text="Save As"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Exit" onAction="#handleExitButton"/>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="About" onAction="#handleAboutButton"/>
+        </Menu>
+    </MenuBar>
+    <HBox>
+        <VBox>
+            <ScrollPane>
+                <VBox fx:id="map" />
+            </ScrollPane>
+            <VBox minHeight="100">
+                <Label>Test</Label>
+            </VBox>
+        </VBox>
+        <VBox minWidth="300">
+            <Label text="Logs" style="-fx-font-size: 20;" />
+            <ListView fx:id="logs" />
+        </VBox>
+    </HBox>
+</VBox>
