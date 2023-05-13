@@ -12,5 +12,5 @@ public interface ICollisionContext {
     void defenderHasDied();
     void attackerHasDied();
     boolean isResolved();
-    Optional<CollisionResult> getResult();
+    CollisionResult getResult();
 }

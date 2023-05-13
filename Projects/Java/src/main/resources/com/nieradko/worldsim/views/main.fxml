@@ -33,7 +33,8 @@
                 <HBox fx:id="map" />
             </ScrollPane>
             <VBox minHeight="100">
-                <Label>Test</Label>
+                <Label>Controls</Label>
+                <Button fx:id="simulateButton" onAction="#handleSimulateButton" text="Simulate round" />
             </VBox>
         </VBox>
         <VBox minWidth="300">

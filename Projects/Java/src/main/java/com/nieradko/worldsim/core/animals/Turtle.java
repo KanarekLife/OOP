@@ -1,12 +1,13 @@
 package com.nieradko.worldsim.core.animals;
 
 import com.nieradko.worldsim.core.*;
+import javafx.scene.paint.Color;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Turtle extends Animal {
     public Turtle(Position position) {
-        super(2,1, position);
+        super(2,1, Color.DARKGREEN, position);
     }
 
     @Override

@@ -1,10 +1,11 @@
 package com.nieradko.worldsim.core.plants;
 
 import com.nieradko.worldsim.core.*;
+import javafx.scene.paint.Color;
 
 public class PineBorscht extends Plant {
     public PineBorscht(Position position) {
-        super(10, position);
+        super(10, Color.GRAY, position);
     }
 
     @Override

@@ -2,10 +2,11 @@ package com.nieradko.worldsim.core.plants;
 
 import com.nieradko.worldsim.core.IActionContext;
 import com.nieradko.worldsim.core.Position;
+import javafx.scene.paint.Color;
 
 public class Dandelion extends Plant {
     public Dandelion(Position position) {
-        super(0, position);
+        super(0, Color.YELLOW, position);
     }
 
     @Override

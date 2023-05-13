@@ -1,16 +1,20 @@
 package com.nieradko.worldsim.core;
 
+import javafx.scene.paint.Color;
+
 import java.util.Optional;
 
-public abstract class Organism implements Comparable<Organism> {
+public abstract class Organism {
     protected int strength;
     private final int initiative;
     private int age;
     private Position position;
+    private Color color;
 
-    protected Organism(int strength, int initiative, Position position) {
+    protected Organism(int strength, int initiative, Color color, Position position) {
         this.strength = strength;
         this.initiative = initiative;
+        this.color = color;
         this.position = position;
         this.age = 0;
     }
@@ -26,8 +30,8 @@ public abstract class Organism implements Comparable<Organism> {
             return Optional.of(newOrganism);
         } catch(Exception ex) {
             System.err.println(ex.getMessage());
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     public int getStrength() {
@@ -42,6 +46,10 @@ public abstract class Organism implements Comparable<Organism> {
         return age;
     }
 
+    public Color getColor() {
+        return color;
+    }
+
     public Position getPosition() {
         return position;
     }
@@ -50,15 +58,4 @@ public abstract class Organism implements Comparable<Organism> {
     }
 
     public void makeOlder() { this.age++; }
-
-    @Override
-    public int compareTo(Organism o) {
-        var comparison = Integer.compare(this.initiative, o.initiative);
-
-        if (comparison != 0) {
-            return comparison * -1;
-        }
-
-        return Integer.compare(this.age, o.age) * -1;
-    }
 }

@@ -1,11 +1,12 @@
 package com.nieradko.worldsim.core.animals;
 
 import com.nieradko.worldsim.core.*;
+import javafx.scene.paint.Color;
 
 public abstract class Animal extends Organism implements IMovable {
 
-    protected Animal(int strength, int initiative, Position position) {
-        super(strength, initiative, position);
+    protected Animal(int strength, int initiative, Color color, Position position) {
+        super(strength, initiative, color, position);
     }
 
     @Override
@@ -18,9 +19,10 @@ public abstract class Animal extends Organism implements IMovable {
     protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
         if (collisionContext.getAttacker().getClass() == this.getClass()) {
             var proposedPosition = worldContext.getRandomNearbyPosition(getPosition(), true);
-            proposedPosition
-                    .flatMap(this::getNewInstance)
-                    .ifPresent(worldContext::add);
+            if (proposedPosition.isPresent()) {
+                getNewInstance(proposedPosition.get())
+                        .ifPresent(newAnimal -> worldContext.add(newAnimal));
+            }
             collisionContext.cancel();
         }
     }

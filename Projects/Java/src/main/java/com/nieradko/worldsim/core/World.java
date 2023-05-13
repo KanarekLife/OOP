@@ -11,7 +11,7 @@ public class World implements IWorldContext, IActionContext {
     private final int N;
     private final int M;
     private final WorldMode mode;
-    private final SortedSet<Organism> organisms = new TreeSet<>();
+    private final ArrayList<Organism> organisms = new ArrayList<>();
     private int round;
     private final IGUIContext guiContext;
 
@@ -25,7 +25,10 @@ public class World implements IWorldContext, IActionContext {
 
     public void simulateRound() {
         // TODO Verify that when organism is killed this does not break!
-        for (var organism : organisms) {
+        for (var organism : organisms
+                .stream()
+                .sorted((Comparator.comparing(Organism::getInitiative).reversed()).thenComparing(Organism::getAge).reversed())
+                .toList()) {
             organism.handleAction(this);
         }
 
@@ -46,11 +49,31 @@ public class World implements IWorldContext, IActionContext {
         return M;
     }
 
-    public Position getNewPosition(int x, int y) {
+    public <T extends Organism> void add(Class<T> c, int n) {
+        try {
+            var constructor = c.getDeclaredConstructor(Position.class);
+            for (int i = 0; i < n; i++) {
+                add(constructor.newInstance(getRandomPosition()));
+            }
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    private Position getPosition(int x, int y) {
         return switch (mode) {
             case Hex -> new HexPosition(x, y);
             case Square -> new SquarePosition(x, y);
         };
+    }
+
+    private Position getRandomPosition() {
+        var rng = ThreadLocalRandom.current();
+        var position = getPosition(rng.nextInt(N), rng.nextInt(M));
+        while(!isPositionEmpty(position)) {
+            position = getPosition(rng.nextInt(N), rng.nextInt(M));
+        }
+        return position;
     }
 
     @Override
@@ -65,11 +88,11 @@ public class World implements IWorldContext, IActionContext {
 
     @Override
     public Optional<Position> getRandomNearbyPosition(Position position, boolean empty, int distance) {
-        // TODO Could be simplified with hashset
-        var stream = position.getAllNearbyPosition(distance);
+        var stream = position.getAllNearbyPosition(distance)
+                .filter(e -> e.isWithinWorldOfSize(N, M));
 
         if (empty) {
-            stream = stream.filter(e -> organisms.stream().anyMatch(o -> o.getPosition().equals(e)));
+            stream = stream.filter(e -> organisms.stream().noneMatch(o -> o.getPosition().equals(e)));
         }
 
         var arr = stream.toArray(Position[]::new);
@@ -87,51 +110,37 @@ public class World implements IWorldContext, IActionContext {
             return;
         }
 
+        var attacker = (Animal)movable;
+
         var optionalDefender = organisms
                 .stream()
                 .filter(o -> o.getPosition().equals(to))
                 .findFirst();
 
         if (optionalDefender.isEmpty()) {
+            guiContext.handleOrganismMoved(attacker, to);
             movable.moveTo(to);
             return;
         }
 
         var defender = optionalDefender.get();
 
-        var optionalAttacker = organisms
-                .stream()
-                .filter(o -> o instanceof Animal)
-                .filter(o -> o.getPosition().equals(movable.getPosition()))
-                .map(o -> (Animal)o)
-                .findFirst();
-
-        if (optionalAttacker.isEmpty()) {
-            throw new RuntimeException("Shouldn't happen");
-        }
-
-        var attacker = optionalAttacker.get();
-
         var context = new CollisionContext(attacker, defender);
         defender.handleCollision(context, this);
         var result = context.getResult();
 
-        if (result.isEmpty()) {
-            throw new RuntimeException("Shouldn't happen");
-        }
-
-        switch (result.get()) {
+        switch (result) {
             case AttackerWon -> {
                 kill(defender);
-                movable.moveTo(to);
                 guiContext.handleOrganismMoved(attacker, to);
+                movable.moveTo(to);
             }
             case DefenderWon -> {
                 kill(attacker);
             }
             case DefenderEvaded -> {
-                movable.moveTo(to);
                 guiContext.handleOrganismMoved(attacker, to);
+                movable.moveTo(to);
             }
             case BothDied -> {
                 kill(defender);
@@ -142,8 +151,10 @@ public class World implements IWorldContext, IActionContext {
 
     @Override
     public void add(Organism organism) {
-        this.organisms.add(organism);
-        guiContext.handleOrganismAdded(organism);
+        if (isPositionEmpty(organism.getPosition())) {
+            this.organisms.add(organism);
+            guiContext.handleOrganismAdded(organism);
+        }
     }
 
     @Override
@@ -169,5 +180,9 @@ public class World implements IWorldContext, IActionContext {
                 )
                 .filter(Optional::isPresent)
                 .map(Optional::get);
+    }
+
+    private boolean isPositionEmpty(Position pos) {
+        return organisms.stream().noneMatch(o -> o.getPosition().equals(pos));
     }
 }

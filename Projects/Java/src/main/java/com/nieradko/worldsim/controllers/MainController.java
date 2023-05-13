@@ -5,17 +5,19 @@ import com.nieradko.worldsim.core.Organism;
 import com.nieradko.worldsim.core.Position;
 import com.nieradko.worldsim.core.World;
 import com.nieradko.worldsim.core.WorldMode;
-import com.nieradko.worldsim.core.animals.Wolf;
+import com.nieradko.worldsim.core.animals.*;
+import com.nieradko.worldsim.core.plants.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 public class MainController implements IGUIContext {
     final int GAP = 0;
     final double TILE_SIZE = 60;
+    private World world = null;
 
     @FXML
     public HBox map;
@@ -23,14 +25,24 @@ public class MainController implements IGUIContext {
     public VBox window;
     @FXML
     public ListView logs;
-    private World world = null;
+    @FXML
+    public Button simulateButton;
 
     @FXML
     public void initialize() {
         world = new World(20, 20, WorldMode.Hex, this);
         renderMap();
 
-        world.add(new Wolf(world.getNewPosition(5, 5)));
+        world.add(Dandelion.class, 1);
+        world.add(Antelope.class, 6);
+        world.add(Grass.class, 1);
+        world.add(Fox.class, 2);
+        world.add(Guarana.class, 1);
+        world.add(Sheep.class, 8);
+        world.add(Nightshade.class, 1);
+        world.add(Turtle.class, 2);
+        world.add(PineBorscht.class, 1);
+        world.add(Wolf.class, 3);
     }
 
     public void handleAboutButton() {
@@ -94,6 +106,7 @@ public class MainController implements IGUIContext {
                 tile.setMaxWidth(TILE_SIZE);
                 tile.setMinHeight(TILE_SIZE);
                 tile.setMaxHeight(TILE_SIZE);
+                tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
                 column.getChildren().add(tile);
             }
             map.getChildren().add(column);
@@ -107,12 +120,14 @@ public class MainController implements IGUIContext {
     public void handleOrganismKilled(Organism organism) {
         var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
         tile.getChildren().clear();
+        tile.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), new Insets(0))));
     }
 
     @Override
     public void handleOrganismAdded(Organism organism) {
         var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
         tile.getChildren().add(new Label(organism.getClass().getSimpleName()));
+        tile.setBackground(new Background(new BackgroundFill(organism.getColor(), new CornerRadii(0), new Insets(0))));
     }
 
     @Override
@@ -120,6 +135,12 @@ public class MainController implements IGUIContext {
         var fromTile = getTile(organism.getPosition().getX(), organism.getPosition().getY());;
         var toTile = getTile(to.getX(), to.getY());
         fromTile.getChildren().clear();
+        fromTile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
         toTile.getChildren().add(new Label(organism.getClass().getSimpleName()));
+        toTile.setBackground(new Background(new BackgroundFill(organism.getColor(), new CornerRadii(0), new Insets(0))));
+    }
+
+    public void handleSimulateButton() {
+        this.world.simulateRound();
     }
 }

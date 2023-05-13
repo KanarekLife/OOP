@@ -53,31 +53,27 @@ public class CollisionContext implements ICollisionContext {
     }
 
     @Override
-    public Optional<CollisionResult> getResult() {
-        if (!isResolved()) {
-            return Optional.empty();
-        }
-
+    public CollisionResult getResult() {
         if (isCancelled) {
-            return Optional.of(CollisionResult.Cancelled);
+            return CollisionResult.Cancelled;
         }
 
         if (hasDefenderDied && !hasAttackerDied) {
-            return Optional.of(CollisionResult.AttackerWon);
+            return CollisionResult.AttackerWon;
         }
 
         if (!hasDefenderDied && hasAttackerDied) {
-            return Optional.of(CollisionResult.DefenderWon);
+            return CollisionResult.DefenderWon;
         }
 
         if (hasDefenderDied) {
-            return Optional.of(CollisionResult.BothDied);
+            return CollisionResult.BothDied;
         }
 
         if (attacker.getStrength() >= defender.getStrength()) {
-            return Optional.of(CollisionResult.AttackerWon);
+            return CollisionResult.AttackerWon;
         }else {
-            return Optional.of(CollisionResult.DefenderWon);
+            return CollisionResult.DefenderWon;
         }
     }
 }

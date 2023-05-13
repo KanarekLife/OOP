@@ -4,12 +4,13 @@ import com.nieradko.worldsim.core.IActionContext;
 import com.nieradko.worldsim.core.ICollisionContext;
 import com.nieradko.worldsim.core.IWorldContext;
 import com.nieradko.worldsim.core.Position;
+import javafx.scene.paint.Color;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Antelope extends Animal {
     public Antelope(Position position) {
-        super(4, 4, position);
+        super(4, 4, Color.ALICEBLUE, position);
     }
 
     @Override
