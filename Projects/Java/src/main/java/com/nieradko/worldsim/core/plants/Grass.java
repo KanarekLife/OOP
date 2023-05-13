@@ -1,9 +1,9 @@
 package com.nieradko.worldsim.core.plants;
 
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.Position;
 
 public class Grass extends Plant {
-    protected Grass(SquarePosition position) {
+    public Grass(Position position) {
         super(0, position);
     }
 }

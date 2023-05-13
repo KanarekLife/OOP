@@ -1,16 +1,17 @@
 package com.nieradko.worldsim.core.plants;
 
 import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.IWorldContext;
+import com.nieradko.worldsim.core.Position;
 
 public class Guarana extends Plant {
-    protected Guarana(SquarePosition position) {
+    public Guarana(Position position) {
         super(0, position);
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        context.getAttacker().increaseStrength(3);
-        context.defenderHasDied();
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        collisionContext.getAttacker().increaseStrength(3);
+        collisionContext.defenderHasDied();
     }
 }

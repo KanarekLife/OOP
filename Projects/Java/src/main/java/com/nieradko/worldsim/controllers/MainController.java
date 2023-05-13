@@ -1,17 +1,21 @@
 package com.nieradko.worldsim.controllers;
 
-import com.nieradko.worldsim.core.HexPosition;
+import com.nieradko.worldsim.IGUIContext;
+import com.nieradko.worldsim.core.Organism;
+import com.nieradko.worldsim.core.Position;
+import com.nieradko.worldsim.core.World;
+import com.nieradko.worldsim.core.WorldMode;
+import com.nieradko.worldsim.core.animals.Wolf;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
-public class MainController {
+public class MainController implements IGUIContext {
     final int GAP = 0;
+    final double TILE_SIZE = 60;
 
     @FXML
     public HBox map;
@@ -19,24 +23,14 @@ public class MainController {
     public VBox window;
     @FXML
     public ListView logs;
+    private World world = null;
 
     @FXML
     public void initialize() {
-        int N = 20;
-        int M = 20;
+        world = new World(20, 20, WorldMode.Hex, this);
+        renderMap();
 
-        drawHexMap(N, M);
-
-        var position = new HexPosition(3, 3);
-        getTile(position.getX(), position.getY()).setStyle("-fx-background-color: red;");
-        position.getAllNearbyPosition(2).forEach(e -> {
-            var tile = getTile(((HexPosition)e).getX(), ((HexPosition)e).getY());
-            tile.setStyle("-fx-background-color: yellow");
-        });
-    }
-
-    private VBox getTile(int x, int y) {
-        return (VBox)((VBox)map.getChildren().get(y)).getChildren().get(x);
+        world.add(new Wolf(world.getNewPosition(5, 5)));
     }
 
     public void handleAboutButton() {
@@ -52,13 +46,22 @@ public class MainController {
         Platform.exit();
     }
 
-    private void drawSquareMap(int n, int m) {
-        final double TILE_SIZE = 60;
+    private void renderMap() {
+        if (this.world == null) {
+            return;
+        }
 
+        switch (world.getMode()) {
+            case Hex -> drawHexMap(world.getN(), world.getM());
+            case Square -> drawSquareMap(world.getN(), world.getM());
+        }
+    }
+
+    private void drawSquareMap(int n, int m) {
         map.getChildren().clear();
         map.setSpacing(GAP);
         for (var i = 0; i < m; i++) {
-            var row = new HBox();
+            var row = new VBox();
             row.setSpacing(GAP);
             for (var j = 0; j < n; j++) {
                 var tile = new VBox();
@@ -74,8 +77,6 @@ public class MainController {
     }
 
     private void drawHexMap(int n, int m) {
-        final double TILE_SIZE = 60;
-        final double HSPACING = (TILE_SIZE / 3) + 8 + (2 * GAP);
         final double VSPACING = ((TILE_SIZE / 4)) * -1 + GAP;
         final double PADDING = ((TILE_SIZE / 3) * 2) - 10  + GAP;
 
@@ -93,11 +94,32 @@ public class MainController {
                 tile.setMaxWidth(TILE_SIZE);
                 tile.setMinHeight(TILE_SIZE);
                 tile.setMaxHeight(TILE_SIZE);
-                tile.setAlignment(Pos.CENTER);
-                tile.getChildren().add(new Label(String.format("(%d, %d)", j, i)));
                 column.getChildren().add(tile);
             }
             map.getChildren().add(column);
         }
+    }
+    private VBox getTile(int x, int y) {
+        return (VBox)((VBox)map.getChildren().get(y)).getChildren().get(x);
+    }
+
+    @Override
+    public void handleOrganismKilled(Organism organism) {
+        var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
+        tile.getChildren().clear();
+    }
+
+    @Override
+    public void handleOrganismAdded(Organism organism) {
+        var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
+        tile.getChildren().add(new Label(organism.getClass().getSimpleName()));
+    }
+
+    @Override
+    public void handleOrganismMoved(Organism organism, Position to) {
+        var fromTile = getTile(organism.getPosition().getX(), organism.getPosition().getY());;
+        var toTile = getTile(to.getX(), to.getY());
+        fromTile.getChildren().clear();
+        toTile.getChildren().add(new Label(organism.getClass().getSimpleName()));
     }
 }

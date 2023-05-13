@@ -1,9 +1,9 @@
 package com.nieradko.worldsim.core.animals;
 
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.Position;
 
 public class Wolf extends Animal {
-    protected Wolf(int strength, int initiative, SquarePosition position) {
+    public Wolf(Position position) {
         super(9, 5, position);
     }
 }

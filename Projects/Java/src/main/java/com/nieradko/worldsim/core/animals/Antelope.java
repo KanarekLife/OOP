@@ -2,12 +2,13 @@ package com.nieradko.worldsim.core.animals;
 
 import com.nieradko.worldsim.core.IActionContext;
 import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.IWorldContext;
+import com.nieradko.worldsim.core.Position;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Antelope extends Animal {
-    protected Antelope(SquarePosition position) {
+    public Antelope(Position position) {
         super(4, 4, position);
     }
 
@@ -18,18 +19,18 @@ public class Antelope extends Animal {
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        super.handleCollision(context);
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        super.handleCollision(collisionContext, worldContext);
 
-        if (context.isResolved()) {
+        if (collisionContext.isResolved()) {
             return;
         }
 
         if (ThreadLocalRandom.current().nextBoolean()) {
-            context.getRandomNearbyPosition(getPosition(), true)
+            worldContext.getRandomNearbyPosition(getPosition(), true)
                     .ifPresent(newPosition -> {
-                        context.move(this, newPosition);
-                        context.defenderHasEvaded();
+                        worldContext.move(this, newPosition);
+                        collisionContext.defenderHasEvaded();
                     });
         }
     }

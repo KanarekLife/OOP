@@ -1,16 +1,17 @@
 package com.nieradko.worldsim.core.plants;
 
 import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.IWorldContext;
+import com.nieradko.worldsim.core.Position;
 
 public class Nightshade extends Plant {
-    protected Nightshade(SquarePosition position) {
+    public Nightshade(Position position) {
         super(99, position);
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        context.defenderHasDied();
-        context.attackerHasDied();
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        collisionContext.defenderHasDied();
+        collisionContext.attackerHasDied();
     }
 }

@@ -2,7 +2,9 @@ package com.nieradko.worldsim.core;
 
 import com.nieradko.worldsim.core.animals.Animal;
 
-public interface ICollisionContext extends IWorldContext {
+import java.util.Optional;
+
+public interface ICollisionContext {
     Animal getAttacker();
     Organism getDefender();
     void cancel();
@@ -10,4 +12,5 @@ public interface ICollisionContext extends IWorldContext {
     void defenderHasDied();
     void attackerHasDied();
     boolean isResolved();
+    Optional<CollisionResult> getResult();
 }

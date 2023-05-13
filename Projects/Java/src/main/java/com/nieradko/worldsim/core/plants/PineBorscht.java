@@ -1,11 +1,9 @@
 package com.nieradko.worldsim.core.plants;
 
-import com.nieradko.worldsim.core.IActionContext;
-import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.*;
 
 public class PineBorscht extends Plant {
-    protected PineBorscht(SquarePosition position) {
+    public PineBorscht(Position position) {
         super(10, position);
     }
 
@@ -17,8 +15,8 @@ public class PineBorscht extends Plant {
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        context.defenderHasDied();
-        context.attackerHasDied();
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        collisionContext.defenderHasDied();
+        collisionContext.attackerHasDied();
     }
 }

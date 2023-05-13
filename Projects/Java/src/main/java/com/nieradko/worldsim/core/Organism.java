@@ -6,9 +6,9 @@ public abstract class Organism implements Comparable<Organism> {
     protected int strength;
     private final int initiative;
     private int age;
-    protected SquarePosition position;
+    private Position position;
 
-    protected Organism(int strength, int initiative, SquarePosition position) {
+    protected Organism(int strength, int initiative, Position position) {
         this.strength = strength;
         this.initiative = initiative;
         this.position = position;
@@ -16,12 +16,12 @@ public abstract class Organism implements Comparable<Organism> {
     }
 
     protected abstract void handleAction(IActionContext context);
-    protected abstract void handleCollision(ICollisionContext context);
+    protected abstract void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext);
 
-    protected Optional<Organism> getNewInstance(SquarePosition position) {
+    protected Optional<Organism> getNewInstance(Position position) {
         try {
             var newOrganism = this.getClass()
-                    .getDeclaredConstructor(SquarePosition.class)
+                    .getDeclaredConstructor(Position.class)
                     .newInstance(position);
             return Optional.of(newOrganism);
         } catch(Exception ex) {
@@ -42,8 +42,11 @@ public abstract class Organism implements Comparable<Organism> {
         return age;
     }
 
-    public SquarePosition getPosition() {
+    public Position getPosition() {
         return position;
+    }
+    protected void setPosition(Position position) {
+        this.position = position;
     }
 
     public void makeOlder() { this.age++; }

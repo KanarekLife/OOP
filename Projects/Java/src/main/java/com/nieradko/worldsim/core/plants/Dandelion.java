@@ -1,10 +1,10 @@
 package com.nieradko.worldsim.core.plants;
 
 import com.nieradko.worldsim.core.IActionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.Position;
 
 public class Dandelion extends Plant {
-    protected Dandelion(SquarePosition position) {
+    public Dandelion(Position position) {
         super(0, position);
     }
 

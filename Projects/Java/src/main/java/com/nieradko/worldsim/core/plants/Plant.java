@@ -1,14 +1,11 @@
 package com.nieradko.worldsim.core.plants;
 
-import com.nieradko.worldsim.core.IActionContext;
-import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.Organism;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Plant extends Organism {
-    protected Plant(int strength, SquarePosition position) {
+    protected Plant(int strength, Position position) {
         super(strength, 0, position);
     }
 
@@ -23,5 +20,5 @@ public abstract class Plant extends Organism {
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {}
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {}
 }

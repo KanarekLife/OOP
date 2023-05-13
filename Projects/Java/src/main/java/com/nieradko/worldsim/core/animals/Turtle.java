@@ -1,13 +1,11 @@
 package com.nieradko.worldsim.core.animals;
 
-import com.nieradko.worldsim.core.IActionContext;
-import com.nieradko.worldsim.core.ICollisionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Turtle extends Animal {
-    protected Turtle(SquarePosition position) {
+    public Turtle(Position position) {
         super(2,1, position);
     }
 
@@ -19,18 +17,18 @@ public class Turtle extends Animal {
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        super.handleCollision(context);
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        super.handleCollision(collisionContext, worldContext);
 
-        if (context.isResolved()) {
+        if (collisionContext.isResolved()) {
             return;
         }
 
-        if (context.getAttacker().getStrength() < 5) {
+        if (collisionContext.getAttacker().getStrength() < 5) {
             // TODO Add Log
-            context.cancel();
+            collisionContext.cancel();
         }else {
-            context.defenderHasDied();
+            collisionContext.defenderHasDied();
         }
     }
 }

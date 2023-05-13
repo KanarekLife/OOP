@@ -1,48 +1,27 @@
 package com.nieradko.worldsim.core;
 
 import java.util.Arrays;
+import java.util.stream.Stream;
 
-public class SquarePosition implements IPosition {
-    private final int x;
-    private final int y;
+public class SquarePosition extends Position {
 
     public SquarePosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
+        super(x, y);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj.getClass() != SquarePosition.class) {
-            return false;
-        }
-
-        var another = (SquarePosition) obj;
-
-        return another.x == this.x && another.y == this.y;
-    }
-
-    @Override
-    public Iterable<IPosition> getAllNearbyPosition(int distance) {
-        var possibleMoves = new SquarePosition[]{
-                new SquarePosition(x, y + distance),
-                new SquarePosition(x + distance, y + distance),
-                new SquarePosition(x + distance, y),
-                new SquarePosition(x + distance, y - distance),
-                new SquarePosition(x, y - distance),
-                new SquarePosition(x - distance, y - distance),
-                new SquarePosition(x - distance, y),
-                new SquarePosition(x - distance, y + distance)
+    public Stream<Position> getAllNearbyPosition(int distance) {
+        var possibleMoves = new Position[]{
+                new SquarePosition(getX(), getY() + distance),
+                new SquarePosition(getX() + distance, getY() + distance),
+                new SquarePosition(getX() + distance, getY()),
+                new SquarePosition(getX() + distance, getY() - distance),
+                new SquarePosition(getX(), getY() - distance),
+                new SquarePosition(getX() - distance, getY() - distance),
+                new SquarePosition(getX() - distance, getY()),
+                new SquarePosition(getX() - distance, getY() + distance)
         };
 
-        return Arrays.asList(possibleMoves);
+        return Arrays.stream(possibleMoves);
     }
 }

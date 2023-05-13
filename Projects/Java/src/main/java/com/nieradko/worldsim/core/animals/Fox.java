@@ -1,10 +1,10 @@
 package com.nieradko.worldsim.core.animals;
 
 import com.nieradko.worldsim.core.IActionContext;
-import com.nieradko.worldsim.core.SquarePosition;
+import com.nieradko.worldsim.core.Position;
 
 public class Fox extends Animal {
-    protected Fox(SquarePosition position) {
+    public Fox(Position position) {
         super(3, 7, position);
     }
 

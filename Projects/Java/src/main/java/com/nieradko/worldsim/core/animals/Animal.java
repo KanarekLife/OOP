@@ -4,7 +4,7 @@ import com.nieradko.worldsim.core.*;
 
 public abstract class Animal extends Organism implements IMovable {
 
-    protected Animal(int strength, int initiative, SquarePosition position) {
+    protected Animal(int strength, int initiative, Position position) {
         super(strength, initiative, position);
     }
 
@@ -15,19 +15,19 @@ public abstract class Animal extends Organism implements IMovable {
     }
 
     @Override
-    protected void handleCollision(ICollisionContext context) {
-        if (context.getAttacker().getClass() == this.getClass()) {
-            var proposedPosition = context.getRandomNearbyPosition(getPosition(), true);
+    protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
+        if (collisionContext.getAttacker().getClass() == this.getClass()) {
+            var proposedPosition = worldContext.getRandomNearbyPosition(getPosition(), true);
             proposedPosition
                     .flatMap(this::getNewInstance)
-                    .ifPresent(context::add);
-            context.cancel();
+                    .ifPresent(worldContext::add);
+            collisionContext.cancel();
         }
     }
 
     @Override
-    public void moveTo(SquarePosition position) {
-        this.position = position;
+    public void moveTo(Position position) {
+        setPosition(position);
     }
 
     public void increaseStrength(int delta) {
