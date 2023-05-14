@@ -4,6 +4,8 @@ import com.nieradko.worldsim.core.IActionContext;
 import com.nieradko.worldsim.core.Position;
 import javafx.scene.paint.Color;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class Human extends Animal {
     private boolean isSpecialPowerActive = false;
     private int specialPowerTimer = 0;
@@ -20,9 +22,9 @@ public class Human extends Animal {
     }
 
     @Override
-    public Color getColor() {
+    public com.nieradko.worldsim.core.Color getColor() {
         if (isSpecialPowerActive) {
-            return Color.DARKORANGE;
+            return new com.nieradko.worldsim.core.Color(javafx.scene.paint.Color.DARKORANGE);
         }else {
             return super.getColor();
         }
@@ -43,8 +45,16 @@ public class Human extends Animal {
 
     private void specialPowerTick(IActionContext context) {
         if (isSpecialPowerActive) {
-            context.getNearbyAnimals(getPosition())
-                    .forEach(context::kill);
+            AtomicInteger atomicKills = new AtomicInteger();
+            context.getNearbyOrganisms(getPosition())
+                    .forEach(animal -> {
+                        context.kill(animal);
+                        atomicKills.getAndIncrement();
+                    });
+            var kills = atomicKills.get();
+            if (kills > 0) {
+                context.log(String.format("Human has killed %d organisms with his special power", kills));
+            }
         }
 
         specialPowerTimer = Math.max(0, specialPowerTimer - 1);

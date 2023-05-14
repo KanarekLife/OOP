@@ -26,7 +26,7 @@ public class Turtle extends Animal {
         }
 
         if (collisionContext.getAttacker().getStrength() < 5) {
-            worldContext.log(String.format("%s cancelled the attack at %s!", getClass().getSimpleName(), getPosition()));
+            worldContext.log(String.format("%s cancelled the attack at %s!", getName(), getPosition()));
             collisionContext.cancel();
         }else {
             collisionContext.defenderHasDied();

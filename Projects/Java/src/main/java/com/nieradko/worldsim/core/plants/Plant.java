@@ -17,7 +17,7 @@ public abstract class Plant extends Organism {
             proposedPosition
                     .flatMap(this::getNewInstance)
                     .ifPresent(organism -> {
-                        context.log(String.format("%s seeded to %s", getClass().getSimpleName(), getPosition()));
+                        context.log(String.format("%s seeded to %s", getName(), getPosition()));
                         context.add(organism);
                     });
         }

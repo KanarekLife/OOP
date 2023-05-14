@@ -194,7 +194,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
                 .findFirst();
 
         if (optionalDefender.isEmpty()) {
-            log(String.format("%s moved to %s", attacker.getClass().getSimpleName(), to));
+            log(String.format("%s moved to %s", attacker.getName(), to));
             movable.moveTo(to);
             return;
         }
@@ -207,20 +207,20 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
 
         switch (result) {
             case AttackerWon -> {
-                log(String.format("%s won battle with defending %s and thus moved to %s", attacker.getClass().getSimpleName(), defender.getClass().getSimpleName(), to));
+                log(String.format("%s won battle with defending %s and thus moved to %s", attacker.getName(), defender.getName(), to));
                 kill(defender);
                 movable.moveTo(to);
             }
             case DefenderWon -> {
-                log(String.format("%s won battle with attacking %s at %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
+                log(String.format("%s won battle with attacking %s at %s", defender.getName(), attacker.getName(), to));
                 kill(attacker);
             }
             case DefenderEvaded -> {
-                log(String.format("%s evaded and thus %s moved to %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
+                log(String.format("%s evaded and thus %s moved to %s", defender.getName(), attacker.getName(), to));
                 movable.moveTo(to);
             }
             case BothDied -> {
-                log(String.format("Both %s and %s have died simultaneously at %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
+                log(String.format("Both %s and %s have died simultaneously at %s", defender.getName(), attacker.getName(), to));
                 kill(defender);
                 kill(attacker);
             }
@@ -230,7 +230,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     @Override
     public void add(Organism organism) {
         if (isPositionEmpty(organism.getPosition())) {
-            log(String.format("%s added at %s", organism.getClass().getSimpleName(), organism.getPosition().toString()));
+            log(String.format("%s added at %s", organism.getName(), organism.getPosition().toString()));
             this.organisms.add(organism);
         }
     }
@@ -242,7 +242,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
             log("Human has died. Game over!");
             guiContext.stopGame();
         }
-        log(String.format("%s died at %s", organism.getClass().getSimpleName(), organism.getPosition().toString()));
+        log(String.format("%s died at %s", organism.getName(), organism.getPosition().toString()));
         this.organisms.remove(organism);
     }
 
@@ -266,6 +266,17 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     }
 
     @Override
+    public Stream<Organism> getNearbyOrganisms(Position position) {
+        return position.getAllNearbyPositions(1)
+                .map(p -> organisms.stream()
+                        .filter(o -> o.getPosition().equals(p))
+                        .findFirst()
+                )
+                .filter(Optional::isPresent)
+                .map(Optional::get);
+    }
+
+    @Override
     public IGUIContext getGUIContext() {
         return guiContext;
     }
@@ -278,6 +289,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     }
 
     public Human getHuman() {
+        //noinspection OptionalGetWithoutIsPresent
         return (Human)organisms.stream().filter(e -> e instanceof Human).findFirst().get();
     }
 }

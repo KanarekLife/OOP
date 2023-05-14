@@ -6,7 +6,6 @@ import com.nieradko.worldsim.core.animals.*;
 import com.nieradko.worldsim.core.plants.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;

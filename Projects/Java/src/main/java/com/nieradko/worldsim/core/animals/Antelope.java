@@ -30,7 +30,7 @@ public class Antelope extends Animal {
         if (ThreadLocalRandom.current().nextBoolean()) {
             worldContext.getRandomNearbyPosition(getPosition(), true)
                     .ifPresent(newPosition -> {
-                        worldContext.log(String.format("%s escaped!", getClass().getSimpleName()));
+                        worldContext.log(String.format("%s escaped!", getName()));
                         worldContext.move(this, newPosition);
                         collisionContext.defenderHasEvaded();
                     });

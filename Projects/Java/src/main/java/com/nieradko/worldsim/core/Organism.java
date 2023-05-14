@@ -8,7 +8,7 @@ public abstract class Organism implements Serializable {
     private final int initiative;
     private int age;
     private Position position;
-    private Color color;
+    private final Color color;
 
     protected Organism(int strength, int initiative, javafx.scene.paint.Color color, Position position) {
         this.strength = strength;
@@ -44,17 +44,17 @@ public abstract class Organism implements Serializable {
     public int getAge() {
         return age;
     }
-
-    public javafx.scene.paint.Color getColor() {
-        return color.getFxColor();
+    public void makeOlder() { this.age++; }
+    public Color getColor() {
+        return color;
     }
-
     public Position getPosition() {
         return position;
+    }
+    public String getName() {
+        return getClass().getSimpleName();
     }
     protected void setPosition(Position position) {
         this.position = position;
     }
-
-    public void makeOlder() { this.age++; }
 }

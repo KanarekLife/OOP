@@ -8,6 +8,6 @@ import java.util.stream.Stream;
 public interface IActionContext extends IWorldContext {
     int getNumberOfLivingOrganisms();
     Stream<Animal> getNearbyAnimals(Position position);
-    void render();
+    Stream<Organism> getNearbyOrganisms(Position position);
     IGUIContext getGUIContext();
 }

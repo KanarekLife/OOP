@@ -22,7 +22,7 @@ public abstract class Animal extends Organism implements IMovable {
             proposedPosition
                     .flatMap(this::getNewInstance)
                     .ifPresent(organism -> {
-                        worldContext.log(String.format("%s has been born at %s", getClass().getSimpleName(), getPosition()));
+                        worldContext.log(String.format("%s has been born at %s", getName(), getPosition()));
                         worldContext.add(organism);
                     });
             collisionContext.cancel();

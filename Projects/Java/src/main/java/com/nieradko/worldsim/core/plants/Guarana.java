@@ -12,7 +12,7 @@ public class Guarana extends Plant {
 
     @Override
     protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
-        worldContext.log(String.format("%s has been consumed which increased %s's strength", getClass().getSimpleName(), collisionContext.getAttacker().getClass().getSimpleName()));
+        worldContext.log(String.format("%s has been consumed which increased %s's strength", getName(), collisionContext.getAttacker().getName()));
         collisionContext.getAttacker().increaseStrength(3);
         collisionContext.defenderHasDied();
     }

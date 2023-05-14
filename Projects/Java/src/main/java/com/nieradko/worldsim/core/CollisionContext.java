@@ -2,8 +2,6 @@ package com.nieradko.worldsim.core;
 
 import com.nieradko.worldsim.core.animals.Animal;
 
-import java.util.Optional;
-
 public class CollisionContext implements ICollisionContext {
     private final Animal attacker;
     private final Organism defender;
@@ -20,11 +18,6 @@ public class CollisionContext implements ICollisionContext {
     @Override
     public Animal getAttacker() {
         return attacker;
-    }
-
-    @Override
-    public Organism getDefender() {
-        return defender;
     }
 
     @Override
