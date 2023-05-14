@@ -1,9 +1,10 @@
 package com.nieradko.worldsim.core;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-public abstract class Position {
+public abstract class Position implements Serializable {
     private final int x;
     private final int y;
 
@@ -42,4 +43,9 @@ public abstract class Position {
     }
 
     abstract Stream<Position> getAllNearbyPosition(int distance);
+
+    @Override
+    public String toString() {
+        return String.format("(%d, %d)", x, y);
+    }
 }

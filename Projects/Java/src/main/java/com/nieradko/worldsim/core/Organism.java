@@ -1,20 +1,19 @@
 package com.nieradko.worldsim.core;
 
-import javafx.scene.paint.Color;
-
+import java.io.Serializable;
 import java.util.Optional;
 
-public abstract class Organism {
+public abstract class Organism implements Serializable {
     protected int strength;
     private final int initiative;
     private int age;
     private Position position;
     private Color color;
 
-    protected Organism(int strength, int initiative, Color color, Position position) {
+    protected Organism(int strength, int initiative, javafx.scene.paint.Color color, Position position) {
         this.strength = strength;
         this.initiative = initiative;
-        this.color = color;
+        this.color = new Color(color);
         this.position = position;
         this.age = 0;
     }
@@ -46,8 +45,8 @@ public abstract class Organism {
         return age;
     }
 
-    public Color getColor() {
-        return color;
+    public javafx.scene.paint.Color getColor() {
+        return color.getFxColor();
     }
 
     public Position getPosition() {

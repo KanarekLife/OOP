@@ -1,49 +1,67 @@
 package com.nieradko.worldsim.controllers;
 
+import com.nieradko.worldsim.Application;
 import com.nieradko.worldsim.IGUIContext;
+import com.nieradko.worldsim.IWorldEventsHandler;
+import com.nieradko.worldsim.core.Log;
 import com.nieradko.worldsim.core.Organism;
-import com.nieradko.worldsim.core.Position;
 import com.nieradko.worldsim.core.World;
-import com.nieradko.worldsim.core.WorldMode;
-import com.nieradko.worldsim.core.animals.*;
-import com.nieradko.worldsim.core.plants.*;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
-public class MainController implements IGUIContext {
+import java.io.*;
+
+public class MainController implements IGUIContext, IWorldEventsHandler {
     final int GAP = 0;
     final double TILE_SIZE = 60;
-    private World world = null;
+    private final SimpleObjectProperty<World> world = new SimpleObjectProperty<>(null);
+    private final SimpleStringProperty saveFile = new SimpleStringProperty(null);
 
     @FXML
     public HBox map;
     @FXML
     public VBox window;
     @FXML
-    public ListView logs;
+    public ListView<Label> logs;
     @FXML
     public Button simulateButton;
 
     @FXML
     public void initialize() {
-        world = new World(20, 20, WorldMode.Hex, this);
-        renderMap();
-
-        world.add(Dandelion.class, 1);
-        world.add(Antelope.class, 6);
-        world.add(Grass.class, 1);
-        world.add(Fox.class, 2);
-        world.add(Guarana.class, 1);
-        world.add(Sheep.class, 8);
-        world.add(Nightshade.class, 1);
-        world.add(Turtle.class, 2);
-        world.add(PineBorscht.class, 1);
-        world.add(Wolf.class, 3);
-        world.render();
+        world.addListener(e -> {
+            var newWorld = ((SimpleObjectProperty<World>) e).getValue();
+            renderMap();
+            newWorld.seed();
+            newWorld.render();
+            newWorld.getLogs()
+                    .addListener((ListChangeListener<Log>) change -> change
+                            .getList().stream()
+                            .reduce((prev, next) -> next)
+                            .ifPresent(this::log));
+        });
+        saveFile.addListener(e -> {
+            var stage = ((Stage) getWindow());
+            var value = ((StringProperty) e).getValue();
+            if (value == null) {
+                stage.setTitle("Stanisław Nieradko [193044]");
+            } else {
+                stage.setTitle(String.format("Stanisław Nieradko [193044] %s", value));
+            }
+        });
     }
 
     public void handleAboutButton() {
@@ -60,13 +78,13 @@ public class MainController implements IGUIContext {
     }
 
     private void renderMap() {
-        if (this.world == null) {
+        if (this.world.getValue() == null) {
             return;
         }
 
-        switch (world.getMode()) {
-            case Hex -> drawHexMap(world.getN(), world.getM());
-            case Square -> drawSquareMap(world.getN(), world.getM());
+        switch (world.getValue().getMode()) {
+            case Hex -> drawHexMap(world.getValue().getN(), world.getValue().getM());
+            case Square -> drawSquareMap(world.getValue().getN(), world.getValue().getM());
         }
     }
 
@@ -91,7 +109,7 @@ public class MainController implements IGUIContext {
 
     private void drawHexMap(int n, int m) {
         final double VSPACING = ((TILE_SIZE / 4)) * -1 + GAP;
-        final double PADDING = ((TILE_SIZE / 3) * 2) - 10  + GAP;
+        final double PADDING = ((TILE_SIZE / 3) * 2) - 10 + GAP;
 
         map.getChildren().clear();
         map.setSpacing(VSPACING);
@@ -113,15 +131,16 @@ public class MainController implements IGUIContext {
             map.getChildren().add(column);
         }
     }
+
     private VBox getTile(int x, int y) {
-        return (VBox)((VBox)map.getChildren().get(y)).getChildren().get(x);
+        return (VBox) ((VBox) map.getChildren().get(y)).getChildren().get(x);
     }
 
     @Override
     public void clearScreen() {
         this.map.getChildren()
                 .stream()
-                .flatMap(e -> ((VBox)e).getChildren().stream())
+                .flatMap(e -> ((VBox) e).getChildren().stream())
                 .forEach(n -> {
                     var node = ((VBox) n);
                     node.getChildren().clear();
@@ -137,6 +156,98 @@ public class MainController implements IGUIContext {
     }
 
     public void handleSimulateButton() {
-        this.world.simulateRound();
+        this.world.getValue().simulateRound();
+    }
+
+    public void handleNewGameButton() throws IOException {
+        var fxmlLoader = new FXMLLoader(Application.class.getResource("views/newgame.fxml"));
+        var scene = new Scene(fxmlLoader.load());
+        fxmlLoader.<NewGameController>getController()
+                .addWorldEventHandler(this);
+        var stage = new Stage();
+        stage.setTitle("Create new world");
+        stage.setScene(scene);
+        stage.sizeToScene();
+        stage.showAndWait();
+    }
+
+    public void handleLoadGameButton() throws IOException, ClassNotFoundException {
+        var fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose your game");
+        fileChooser.setInitialFileName("game.world");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game Files", "*.world"));
+        var file = fileChooser.showOpenDialog(getWindow());
+        if (file == null) {
+            return;
+        }
+
+        if (!file.exists()) {
+            var alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("File not found!");
+            alert.showAndWait();
+            return;
+        }
+
+        var stream = new ObjectInputStream(new FileInputStream(file.getAbsolutePath()));
+        World world = (World) stream.readObject();
+        world.setGuiContext(this);
+        updateWorld(world);
+        saveFile.setValue(file.getAbsolutePath());
+        stream.close();
+        log(String.format("Loaded world from %s", saveFile.get()));
+    }
+
+    public void handleSaveGameButton() throws IOException {
+        if (saveFile.getValue() == null) {
+            handleSaveAsGameButton();
+            return;
+        }
+
+        var stream = new ObjectOutputStream(new FileOutputStream(saveFile.get(), false));
+        World tmpWorld = world.getValue();
+        stream.writeObject(tmpWorld);
+        stream.close();
+        log(String.format("Saved game to %s", saveFile.get()));
+    }
+
+    public void handleSaveAsGameButton() throws IOException {
+        var fileChooser = new FileChooser();
+        fileChooser.setTitle("Choose where to save your game");
+        fileChooser.setInitialFileName("game.world");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Game Files", "*.world"));
+        var file = fileChooser.showSaveDialog(getWindow());
+
+        if (file == null) {
+            return;
+        }
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+
+        saveFile.setValue(file.getAbsolutePath());
+        handleSaveGameButton();
+    }
+
+    @Override
+    public IGUIContext getGUIContext() {
+        return this;
+    }
+
+    @Override
+    public void updateWorld(World world) {
+        this.world.setValue(world);
+        this.saveFile.setValue(null);
+    }
+
+    private Window getWindow() {
+        return map.getScene().getWindow();
+    }
+
+    private void log(Log log) {
+        logs.getItems().add(new Label(String.format("[%d] %s", log.round(), log.message())));
+    }
+
+    private void log(String message) {
+        logs.getItems().add(new Label(String.format("[!] %s", message)));
     }
 }

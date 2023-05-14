@@ -1,25 +1,26 @@
 package com.nieradko.worldsim.core;
 
 import com.nieradko.worldsim.IGUIContext;
-import com.nieradko.worldsim.core.animals.Animal;
-import javafx.scene.paint.Color;
+import com.nieradko.worldsim.core.animals.*;
+import com.nieradko.worldsim.core.plants.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Stream;
 
-public class World implements IWorldContext, IActionContext {
+public class World implements IWorldContext, IActionContext, Serializable, ILogger {
     private final int N;
     private final int M;
     private final WorldMode mode;
     private final ArrayList<Organism> organisms = new ArrayList<>();
-    private int round;
-    private final IGUIContext guiContext;
-
-    public void render() {
-        guiContext.clearScreen();
-        organisms.forEach(guiContext::drawOrganism);
-    }
+    private final ObservableList<Log> logs = FXCollections.observableArrayList();
+    private int round = 0;
+    private transient IGUIContext guiContext;
 
     public World(int n, int m, WorldMode mode, IGUIContext guiContext) {
         this.N = n;
@@ -29,8 +30,18 @@ public class World implements IWorldContext, IActionContext {
         this.guiContext = guiContext;
     }
 
+    public void render() {
+        guiContext.clearScreen();
+        organisms.forEach(guiContext::drawOrganism);
+    }
+
+    public void setGuiContext(IGUIContext guiContext) {
+        this.guiContext = guiContext;
+    }
+
     public void simulateRound() {
-        // TODO Verify that when organism is killed this does not break!
+        log("Round started");
+
         for (var organism : organisms
                 .stream()
                 .sorted((Comparator.comparing(Organism::getInitiative).reversed()).thenComparing(Organism::getAge).reversed())
@@ -40,6 +51,8 @@ public class World implements IWorldContext, IActionContext {
 
         render();
         organisms.forEach(Organism::makeOlder);
+
+        log("Round ended");
 
         round++;
     }
@@ -56,7 +69,26 @@ public class World implements IWorldContext, IActionContext {
         return M;
     }
 
-    public <T extends Organism> void add(Class<T> c, int n) {
+    public void seed() {
+        if (getNumberOfLivingOrganisms() == 0) {
+            add(Dandelion.class, 1);
+            add(Antelope.class, 6);
+            add(Grass.class, 1);
+            add(Fox.class, 2);
+            add(Guarana.class, 1);
+            add(Sheep.class, 8);
+            add(Nightshade.class, 1);
+            add(Turtle.class, 2);
+            add(PineBorscht.class, 1);
+            add(Wolf.class, 3);
+        }
+    }
+
+    public ObservableList<Log> getLogs() {
+        return logs;
+    }
+
+    private <T extends Organism> void add(Class<T> c, int n) {
         try {
             var constructor = c.getDeclaredConstructor(Position.class);
             for (int i = 0; i < n; i++) {
@@ -81,6 +113,10 @@ public class World implements IWorldContext, IActionContext {
             position = getPosition(rng.nextInt(N), rng.nextInt(M));
         }
         return position;
+    }
+
+    private boolean isPositionEmpty(Position pos) {
+        return organisms.stream().noneMatch(o -> o.getPosition().equals(pos));
     }
 
     @Override
@@ -137,16 +173,20 @@ public class World implements IWorldContext, IActionContext {
 
         switch (result) {
             case AttackerWon -> {
+                log(String.format("%s won battle with defending %s and thus moved to %s", attacker.getClass().getSimpleName(), defender.getClass().getSimpleName(), to));
                 kill(defender);
                 movable.moveTo(to);
             }
             case DefenderWon -> {
+                log(String.format("%s won battle with attacking %s at %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
                 kill(attacker);
             }
             case DefenderEvaded -> {
+                log(String.format("%s evaded and thus %s moved to %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
                 movable.moveTo(to);
             }
             case BothDied -> {
+                log(String.format("Both %s and %s have died simultaneously at %s", defender.getClass().getSimpleName(), attacker.getClass().getSimpleName(), to));
                 kill(defender);
                 kill(attacker);
             }
@@ -156,12 +196,14 @@ public class World implements IWorldContext, IActionContext {
     @Override
     public void add(Organism organism) {
         if (isPositionEmpty(organism.getPosition())) {
+            log(String.format("%s added at %s", organism.getClass().getSimpleName(), organism.getPosition().toString()));
             this.organisms.add(organism);
         }
     }
 
     @Override
     public void kill(Organism organism) {
+        log(String.format("%s died at %s", organism.getClass().getSimpleName(), organism.getPosition().toString()));
         this.organisms.remove(organism);
     }
 
@@ -184,7 +226,8 @@ public class World implements IWorldContext, IActionContext {
                 .map(Optional::get);
     }
 
-    private boolean isPositionEmpty(Position pos) {
-        return organisms.stream().noneMatch(o -> o.getPosition().equals(pos));
+    @Override
+    public void log(String message) {
+        this.logs.add(new Log(round, message));
     }
 }

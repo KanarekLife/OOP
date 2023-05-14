@@ -1,6 +1,8 @@
 package com.nieradko.worldsim.core;
 
-public enum WorldMode {
+import java.io.Serializable;
+
+public enum WorldMode implements Serializable {
     Square,
     Hex
 }

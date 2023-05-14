@@ -7,19 +7,21 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 
+<?import javafx.geometry.Insets?>
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.nieradko.worldsim.controllers.MainController"
       prefHeight="400.0" prefWidth="600.0" fx:id="window">
     <stylesheets>
-        <URL value="@../css/hexmap.css"/>
+        <URL value="@../css/base.css" />
+        <URL value="@../css/hexmap.css" />
     </stylesheets>
     <MenuBar>
         <Menu text="Game">
-            <MenuItem text="New"/>
-            <MenuItem text="Open"/>
-            <MenuItem text="Save"/>
-            <MenuItem text="Save As"/>
+            <MenuItem text="New" onAction="#handleNewGameButton" />
+            <MenuItem text="Open" onAction="#handleLoadGameButton" />
+            <MenuItem text="Save" onAction="#handleSaveGameButton" />
+            <MenuItem text="Save As" onAction="#handleSaveAsGameButton" />
             <SeparatorMenuItem/>
             <MenuItem text="Exit" onAction="#handleExitButton"/>
         </Menu>
@@ -27,19 +29,20 @@
             <MenuItem text="About" onAction="#handleAboutButton"/>
         </Menu>
     </MenuBar>
-    <HBox>
-        <VBox>
-            <ScrollPane>
-                <HBox fx:id="map" />
-            </ScrollPane>
-            <VBox minHeight="100">
-                <Label>Controls</Label>
-                <Button fx:id="simulateButton" onAction="#handleSimulateButton" text="Simulate round" />
-            </VBox>
-        </VBox>
-        <VBox minWidth="300">
-            <Label text="Logs" style="-fx-font-size: 20;" />
+    <GridPane vgap="5" hgap="5">
+        <padding>
+            <Insets left="5" right="5" top="5" bottom="5" />
+        </padding>
+        <ScrollPane GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS">
+            <HBox fx:id="map" />
+        </ScrollPane>
+        <VBox minWidth="300" maxWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1">
+            <Label text="Logs" styleClass="header" />
             <ListView fx:id="logs" />
         </VBox>
-    </HBox>
+        <VBox minHeight="100" GridPane.rowIndex="1" GridPane.columnSpan="2">
+            <Label text="Controls" styleClass="header" />
+            <Button fx:id="simulateButton" onAction="#handleSimulateButton" text="Simulate round" />
+        </VBox>
+    </GridPane>
 </VBox>
