@@ -19,10 +19,9 @@ public abstract class Animal extends Organism implements IMovable {
     protected void handleCollision(ICollisionContext collisionContext, IWorldContext worldContext) {
         if (collisionContext.getAttacker().getClass() == this.getClass()) {
             var proposedPosition = worldContext.getRandomNearbyPosition(getPosition(), true);
-            if (proposedPosition.isPresent()) {
-                getNewInstance(proposedPosition.get())
-                        .ifPresent(newAnimal -> worldContext.add(newAnimal));
-            }
+            proposedPosition
+                    .flatMap(this::getNewInstance)
+                    .ifPresent(worldContext::add);
             collisionContext.cancel();
         }
     }

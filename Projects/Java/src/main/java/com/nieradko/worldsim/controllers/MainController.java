@@ -43,6 +43,7 @@ public class MainController implements IGUIContext {
         world.add(Turtle.class, 2);
         world.add(PineBorscht.class, 1);
         world.add(Wolf.class, 3);
+        world.render();
     }
 
     public void handleAboutButton() {
@@ -117,27 +118,22 @@ public class MainController implements IGUIContext {
     }
 
     @Override
-    public void handleOrganismKilled(Organism organism) {
-        var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
-        tile.getChildren().clear();
-        tile.setBackground(new Background(new BackgroundFill(Color.WHITE, new CornerRadii(0), new Insets(0))));
+    public void clearScreen() {
+        this.map.getChildren()
+                .stream()
+                .flatMap(e -> ((VBox)e).getChildren().stream())
+                .forEach(n -> {
+                    var node = ((VBox) n);
+                    node.getChildren().clear();
+                    node.setBackground(new Background(new BackgroundFill(Color.WHITESMOKE, new CornerRadii(0), new Insets(0))));
+                });
     }
 
     @Override
-    public void handleOrganismAdded(Organism organism) {
+    public void drawOrganism(Organism organism) {
         var tile = getTile(organism.getPosition().getX(), organism.getPosition().getY());
         tile.getChildren().add(new Label(organism.getClass().getSimpleName()));
         tile.setBackground(new Background(new BackgroundFill(organism.getColor(), new CornerRadii(0), new Insets(0))));
-    }
-
-    @Override
-    public void handleOrganismMoved(Organism organism, Position to) {
-        var fromTile = getTile(organism.getPosition().getX(), organism.getPosition().getY());;
-        var toTile = getTile(to.getX(), to.getY());
-        fromTile.getChildren().clear();
-        fromTile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
-        toTile.getChildren().add(new Label(organism.getClass().getSimpleName()));
-        toTile.setBackground(new Background(new BackgroundFill(organism.getColor(), new CornerRadii(0), new Insets(0))));
     }
 
     public void handleSimulateButton() {

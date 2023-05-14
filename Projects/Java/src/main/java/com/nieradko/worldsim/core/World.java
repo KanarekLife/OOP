@@ -2,6 +2,7 @@ package com.nieradko.worldsim.core;
 
 import com.nieradko.worldsim.IGUIContext;
 import com.nieradko.worldsim.core.animals.Animal;
+import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -14,6 +15,11 @@ public class World implements IWorldContext, IActionContext {
     private final ArrayList<Organism> organisms = new ArrayList<>();
     private int round;
     private final IGUIContext guiContext;
+
+    public void render() {
+        guiContext.clearScreen();
+        organisms.forEach(guiContext::drawOrganism);
+    }
 
     public World(int n, int m, WorldMode mode, IGUIContext guiContext) {
         this.N = n;
@@ -32,6 +38,7 @@ public class World implements IWorldContext, IActionContext {
             organism.handleAction(this);
         }
 
+        render();
         organisms.forEach(Organism::makeOlder);
 
         round++;
@@ -118,7 +125,6 @@ public class World implements IWorldContext, IActionContext {
                 .findFirst();
 
         if (optionalDefender.isEmpty()) {
-            guiContext.handleOrganismMoved(attacker, to);
             movable.moveTo(to);
             return;
         }
@@ -132,14 +138,12 @@ public class World implements IWorldContext, IActionContext {
         switch (result) {
             case AttackerWon -> {
                 kill(defender);
-                guiContext.handleOrganismMoved(attacker, to);
                 movable.moveTo(to);
             }
             case DefenderWon -> {
                 kill(attacker);
             }
             case DefenderEvaded -> {
-                guiContext.handleOrganismMoved(attacker, to);
                 movable.moveTo(to);
             }
             case BothDied -> {
@@ -153,14 +157,12 @@ public class World implements IWorldContext, IActionContext {
     public void add(Organism organism) {
         if (isPositionEmpty(organism.getPosition())) {
             this.organisms.add(organism);
-            guiContext.handleOrganismAdded(organism);
         }
     }
 
     @Override
     public void kill(Organism organism) {
         this.organisms.remove(organism);
-        guiContext.handleOrganismKilled(organism);
     }
 
     @Override

@@ -5,6 +5,6 @@ import javafx.scene.paint.Color;
 
 public class Sheep extends Animal {
     public Sheep(Position position) {
-        super(4, 4, Color.WHITESMOKE, position);
+        super(4, 4, Color.NAVAJOWHITE, position);
     }
 }
