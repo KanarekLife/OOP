@@ -3,6 +3,8 @@ package com.nieradko.worldsim.core;
 import com.nieradko.worldsim.IGUIContext;
 import com.nieradko.worldsim.core.animals.*;
 import com.nieradko.worldsim.core.plants.*;
+import com.nieradko.worldsim.core.positions.HexPosition;
+import com.nieradko.worldsim.core.positions.SquarePosition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -19,7 +21,9 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     private final WorldMode mode;
     private final ArrayList<Organism> organisms = new ArrayList<>();
     private final ObservableList<Log> logs = FXCollections.observableArrayList();
-    private int round = 0;
+    private int round = 1;
+    private WorldState state = WorldState.WaitingForNewRound;
+    private boolean isGameRunning = true;
     private transient IGUIContext guiContext;
 
     public World(int n, int m, WorldMode mode, IGUIContext guiContext) {
@@ -40,6 +44,33 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     }
 
     public void simulateRound() {
+        if (!isGameRunning) {
+            return;
+        }
+
+        if (state == WorldState.WaitingForHumanInput) {
+            boolean humanFound = false;
+            for (var organism : organisms
+                    .stream()
+                    .sorted((Comparator.comparing(Organism::getInitiative).reversed()).thenComparing(Organism::getAge).reversed())
+                    .toList()) {
+                if (organism instanceof Human) {
+                    humanFound = true;
+                    continue;
+                }
+                if (humanFound) {
+                    organism.handleAction(this);
+                }
+            }
+            render();
+            organisms.forEach(Organism::makeOlder);
+
+            log("Round ended");
+
+            round++;
+            state = WorldState.WaitingForNewRound;
+        }
+
         log("Round started");
 
         for (var organism : organisms
@@ -47,14 +78,13 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
                 .sorted((Comparator.comparing(Organism::getInitiative).reversed()).thenComparing(Organism::getAge).reversed())
                 .toList()) {
             organism.handleAction(this);
+            if (organism instanceof Human) {
+                break;
+            }
         }
 
         render();
-        organisms.forEach(Organism::makeOlder);
-
-        log("Round ended");
-
-        round++;
+        state = WorldState.WaitingForHumanInput;
     }
 
     public WorldMode getMode() {
@@ -81,6 +111,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
             add(Turtle.class, 2);
             add(PineBorscht.class, 1);
             add(Wolf.class, 3);
+            add(Human.class, 1);
         }
     }
 
@@ -97,6 +128,10 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
         } catch (Exception ex) {
             System.err.println(ex.getMessage());
         }
+    }
+
+    public boolean isGameRunning() {
+        return isGameRunning;
     }
 
     private Position getPosition(int x, int y) {
@@ -131,7 +166,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
 
     @Override
     public Optional<Position> getRandomNearbyPosition(Position position, boolean empty, int distance) {
-        var stream = position.getAllNearbyPosition(distance)
+        var stream = position.getAllNearbyPositions(distance)
                 .filter(e -> e.isWithinWorldOfSize(N, M));
 
         if (empty) {
@@ -161,6 +196,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
                 .findFirst();
 
         if (optionalDefender.isEmpty()) {
+            log(String.format("%s moved to %s", attacker.getClass().getSimpleName(), to));
             movable.moveTo(to);
             return;
         }
@@ -203,6 +239,11 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
 
     @Override
     public void kill(Organism organism) {
+        if (organism instanceof Human) {
+            isGameRunning = false;
+            log("Human has died. Game over!");
+            guiContext.stopGame();
+        }
         log(String.format("%s died at %s", organism.getClass().getSimpleName(), organism.getPosition().toString()));
         this.organisms.remove(organism);
     }
@@ -214,7 +255,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
 
     @Override
     public Stream<Animal> getNearbyAnimals(Position position) {
-        return position.getAllNearbyPosition(1)
+        return position.getAllNearbyPositions(1)
                 .map(p -> organisms
                         .stream()
                         .filter(o -> o instanceof Animal)
@@ -227,7 +268,21 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     }
 
     @Override
+    public void requestRender() {
+        render();
+    }
+
+    @Override
+    public IGUIContext getGUIContext() {
+        return guiContext;
+    }
+
+    @Override
     public void log(String message) {
         this.logs.add(new Log(round, message));
+    }
+
+    public Human getHuman() {
+        return (Human)organisms.stream().filter(e -> e instanceof Human).findFirst().get();
     }
 }

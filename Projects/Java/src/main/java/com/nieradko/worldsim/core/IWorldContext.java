@@ -9,4 +9,5 @@ public interface IWorldContext {
     void move(IMovable movable, Position to);
     void add(Organism organism);
     void kill(Organism animal);
+    void log(String message);
 }

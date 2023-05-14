@@ -21,7 +21,10 @@ public abstract class Animal extends Organism implements IMovable {
             var proposedPosition = worldContext.getRandomNearbyPosition(getPosition(), true);
             proposedPosition
                     .flatMap(this::getNewInstance)
-                    .ifPresent(worldContext::add);
+                    .ifPresent(organism -> {
+                        worldContext.log(String.format("%s has been born at %s", getClass().getSimpleName(), getPosition()));
+                        worldContext.add(organism);
+                    });
             collisionContext.cancel();
         }
     }

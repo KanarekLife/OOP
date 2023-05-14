@@ -36,13 +36,15 @@
         <ScrollPane GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS">
             <HBox fx:id="map" />
         </ScrollPane>
-        <VBox minWidth="300" maxWidth="300" GridPane.rowIndex="0" GridPane.columnIndex="1">
+        <VBox minWidth="400" maxWidth="400" GridPane.rowIndex="0" GridPane.columnIndex="1">
             <Label text="Logs" styleClass="header" />
             <ListView fx:id="logs" />
         </VBox>
-        <VBox minHeight="100" GridPane.rowIndex="1" GridPane.columnSpan="2">
+        <VBox minHeight="150" GridPane.rowIndex="1" GridPane.columnSpan="2">
             <Label text="Controls" styleClass="header" />
-            <Button fx:id="simulateButton" onAction="#handleSimulateButton" text="Simulate round" />
+            <HBox>
+                <HBox fx:id="controls" />
+            </HBox>
         </VBox>
     </GridPane>
 </VBox>

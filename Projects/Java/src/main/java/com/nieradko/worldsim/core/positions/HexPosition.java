@@ -1,4 +1,6 @@
-package com.nieradko.worldsim.core;
+package com.nieradko.worldsim.core.positions;
+
+import com.nieradko.worldsim.core.Position;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -11,7 +13,7 @@ public class HexPosition extends Position {
     }
 
     @Override
-    public Stream<Position> getAllNearbyPosition(int distance) {
+    public Stream<Position> getAllNearbyPositions(int distance) {
         HexPosition[] possibleMoves;
 
         if (getY() % 2 == 0) {
@@ -47,7 +49,7 @@ public class HexPosition extends Position {
         while (depth < distance) {
             result.clear();
             for (var pos : queue) {
-                var moves = StreamSupport.stream(pos.getAllNearbyPosition(1).spliterator(), false)
+                var moves = StreamSupport.stream(pos.getAllNearbyPositions(1).spliterator(), false)
                         .filter(p -> !hashSet.contains(p))
                         .toList();
                 hashSet.addAll(moves);

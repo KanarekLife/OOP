@@ -3,14 +3,12 @@ package com.nieradko.worldsim.controllers;
 import com.nieradko.worldsim.Application;
 import com.nieradko.worldsim.IGUIContext;
 import com.nieradko.worldsim.IWorldEventsHandler;
-import com.nieradko.worldsim.core.Log;
-import com.nieradko.worldsim.core.Organism;
-import com.nieradko.worldsim.core.World;
+import com.nieradko.worldsim.core.*;
+import com.nieradko.worldsim.core.animals.Human;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,12 +22,14 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.io.*;
+import java.util.stream.Stream;
 
 public class MainController implements IGUIContext, IWorldEventsHandler {
     final int GAP = 0;
     final double TILE_SIZE = 60;
     private final SimpleObjectProperty<World> world = new SimpleObjectProperty<>(null);
     private final SimpleStringProperty saveFile = new SimpleStringProperty(null);
+    private VBox[] controlButtons = null;
 
     @FXML
     public HBox map;
@@ -38,7 +38,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
     @FXML
     public ListView<Label> logs;
     @FXML
-    public Button simulateButton;
+    public HBox controls;
 
     @FXML
     public void initialize() {
@@ -46,12 +46,18 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
             var newWorld = ((SimpleObjectProperty<World>) e).getValue();
             renderMap();
             newWorld.seed();
-            newWorld.render();
             newWorld.getLogs()
-                    .addListener((ListChangeListener<Log>) change -> change
-                            .getList().stream()
-                            .reduce((prev, next) -> next)
-                            .ifPresent(this::log));
+                    .addListener((ListChangeListener<Log>) change -> {
+                        change.getList()
+                                .stream()
+                                .reduce((prev, next) -> next)
+                                .ifPresent(this::log);
+                        logs.scrollTo(logs.getItems().size() - 1);
+                    });
+            newWorld.render();
+            if (newWorld.isGameRunning()) {
+                newWorld.simulateRound();
+            }
         });
         saveFile.addListener(e -> {
             var stage = ((Stage) getWindow());
@@ -101,10 +107,44 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 tile.setMaxWidth(TILE_SIZE);
                 tile.setMinHeight(TILE_SIZE);
                 tile.setMaxHeight(TILE_SIZE);
+                tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
+                int finalJ = j;
+                int finalI = i;
+                tile.setOnMouseClicked(e -> {
+                    System.out.printf("(%d, %d)\n", finalJ, finalI);
+                });
                 row.getChildren().add(tile);
             }
             map.getChildren().add(row);
         }
+
+        controls.getChildren().clear();
+        controls.setSpacing(GAP);
+        for (var i = 0; i < 3; i++) {
+            var column = new VBox();
+            for (var j = 0; j < 3; j++) {
+                var tile = new VBox();
+                tile.getStyleClass().add("square-tile");
+                tile.setMinWidth(TILE_SIZE / 2);
+                tile.setMaxWidth(TILE_SIZE / 2);
+                tile.setMinHeight(TILE_SIZE / 2);
+                tile.setMaxHeight(TILE_SIZE / 2);
+                tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
+                column.getChildren().add(tile);
+            }
+            controls.getChildren().add(column);
+        }
+
+        controlButtons = new VBox[] {
+                (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(1),
+                (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(1),
+                (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(0),
+                (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(0),
+                (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(0),
+        };
     }
 
     private void drawHexMap(int n, int m) {
@@ -130,6 +170,40 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
             }
             map.getChildren().add(column);
         }
+
+        final double CONTROL_TILE = TILE_SIZE / 2;
+        final double CONTROL_VSPACING = ((CONTROL_TILE / 4)) * -1 + GAP;
+        final double CONTROL_PADDING = ((CONTROL_TILE / 3) * 2) - 5 + GAP;
+
+        controls.getChildren().clear();
+        controls.setSpacing(CONTROL_VSPACING);
+        for (var i = 0; i < 3; i++) {
+            var column = new VBox();
+            if (i % 2 != 0) {
+                column.setPadding(new Insets(CONTROL_PADDING, 0, 0, 0));
+            }
+            for (var j = 0; j < 3; j++) {
+                var tile = new VBox();
+                tile.setMinWidth(CONTROL_TILE);
+                tile.setMaxWidth(CONTROL_TILE);
+                tile.setMinHeight(CONTROL_TILE);
+                tile.setMaxHeight(CONTROL_TILE);
+                if ((i != 0 || j != 0) && (i != 2 || j != 0)) {
+                    tile.getStyleClass().add("hex-tile");
+                    tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
+                }
+                column.getChildren().add(tile);
+            }
+            controls.getChildren().add(column);
+        }
+        controlButtons = new VBox[] {
+                (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(0),
+                (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(1),
+                (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(2),
+                (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(1)
+        };
     }
 
     private VBox getTile(int x, int y) {
@@ -155,8 +229,31 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
         tile.setBackground(new Background(new BackgroundFill(organism.getColor(), new CornerRadii(0), new Insets(0))));
     }
 
-    public void handleSimulateButton() {
-        this.world.getValue().simulateRound();
+    @Override
+    public void setupControls(Stream<Position> allNearbyPositions) {
+        var iterator = allNearbyPositions.iterator();
+        for (var button : controlButtons) {
+            button.setPadding(new Insets(5));
+            final Position position = iterator.next();
+            button.setOnMouseClicked(e -> {
+                var tmp = world.getValue();
+                if (tmp != null) {
+                    tmp.move(tmp.getHuman(), position);
+                    if (tmp.isGameRunning()) {
+                        tmp.simulateRound();
+                    }
+                }else {
+                    System.err.println("setupControls error");
+                }
+            });
+        }
+    }
+
+    @Override
+    public void stopGame() {
+        var alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("Human has died.");
+        alert.showAndWait();
     }
 
     public void handleNewGameButton() throws IOException {

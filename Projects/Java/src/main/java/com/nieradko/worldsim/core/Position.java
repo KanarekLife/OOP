@@ -21,7 +21,7 @@ public abstract class Position implements Serializable {
         return y;
     }
 
-    boolean isWithinWorldOfSize(int n, int m) {
+    public boolean isWithinWorldOfSize(int n, int m) {
         return x >= 0
                 && y >= 0
                 && x < n
@@ -42,7 +42,7 @@ public abstract class Position implements Serializable {
         return Objects.hash(x, y);
     }
 
-    abstract Stream<Position> getAllNearbyPosition(int distance);
+    public abstract Stream<Position> getAllNearbyPositions(int distance);
 
     @Override
     public String toString() {

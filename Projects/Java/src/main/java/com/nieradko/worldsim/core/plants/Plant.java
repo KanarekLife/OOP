@@ -16,7 +16,10 @@ public abstract class Plant extends Organism {
             var proposedPosition = context.getRandomNearbyPosition(getPosition(), true);
             proposedPosition
                     .flatMap(this::getNewInstance)
-                    .ifPresent(context::add);
+                    .ifPresent(organism -> {
+                        context.log(String.format("%s seeded to %s", getClass().getSimpleName(), getPosition()));
+                        context.add(organism);
+                    });
         }
     }
 

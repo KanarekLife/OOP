@@ -10,4 +10,5 @@ module com.nieradko.worldsim {
     exports com.nieradko.worldsim.core.animals;
     exports com.nieradko.worldsim.core.plants;
     opens com.nieradko.worldsim.controllers to javafx.fxml;
+    exports com.nieradko.worldsim.core.positions;
 }
