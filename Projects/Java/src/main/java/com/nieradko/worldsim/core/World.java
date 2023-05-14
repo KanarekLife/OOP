@@ -104,11 +104,11 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     public void seed() {
         if (getNumberOfLivingOrganisms() == 0) {
             add(Dandelion.class, 1);
-            add(Antelope.class, 6);
+            add(Antelope.class, 2);
             add(Grass.class, 1);
             add(Fox.class, 2);
             add(Guarana.class, 1);
-            add(Sheep.class, 8);
+            add(Sheep.class, 4);
             add(Nightshade.class, 1);
             add(Turtle.class, 2);
             add(PineBorscht.class, 1);

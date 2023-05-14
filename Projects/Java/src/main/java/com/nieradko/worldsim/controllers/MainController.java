@@ -50,6 +50,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
             renderMap();
             newWorld.seed();
             newWorld.render();
+            logs.getItems().clear();
             newWorld.getLogs().forEach(this::log);
             if (newWorld.isGameRunning()) {
                 newWorld.simulateRound();
