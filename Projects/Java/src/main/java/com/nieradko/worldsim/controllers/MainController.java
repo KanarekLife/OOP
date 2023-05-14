@@ -4,7 +4,8 @@ import com.nieradko.worldsim.Application;
 import com.nieradko.worldsim.IGUIContext;
 import com.nieradko.worldsim.IWorldEventsHandler;
 import com.nieradko.worldsim.core.*;
-import com.nieradko.worldsim.core.animals.Human;
+import com.nieradko.worldsim.core.positions.HexPosition;
+import com.nieradko.worldsim.core.positions.SquarePosition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -110,6 +111,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
                 int finalJ = j;
                 int finalI = i;
+                tile.setOnMouseClicked(e -> addOnField(new SquarePosition(finalJ, finalI)));
                 tile.setOnMouseClicked(e -> {
                     System.out.printf("(%d, %d)\n", finalJ, finalI);
                 });
@@ -166,6 +168,9 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 tile.setMinHeight(TILE_SIZE);
                 tile.setMaxHeight(TILE_SIZE);
                 tile.setBackground(new Background(new BackgroundFill(Color.GHOSTWHITE, new CornerRadii(0), new Insets(0))));
+                int finalJ = j;
+                int finalI = i;
+                tile.setOnMouseClicked(e -> addOnField(new HexPosition(finalJ, finalI)));
                 column.getChildren().add(tile);
             }
             map.getChildren().add(column);
@@ -204,6 +209,29 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(2),
                 (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(1)
         };
+    }
+
+    private void addOnField(Position position) {
+        var tmp = world.getValue();
+
+        if (tmp == null) {
+            return;
+        }
+
+        try {
+            var fxmlLoader = new FXMLLoader(Application.class.getResource("views/neworganism.fxml"));
+            var scene = new Scene(fxmlLoader.load());
+            fxmlLoader.<NewOrganismController>getController()
+                    .setWorld(world.getValue())
+                    .setPosition(position);
+            var stage = new Stage();
+            stage.setTitle("Add new organism");
+            stage.setScene(scene);
+            stage.sizeToScene();
+            stage.showAndWait();
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 
     private VBox getTile(int x, int y) {
