@@ -10,7 +10,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -47,15 +46,8 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
             var newWorld = ((SimpleObjectProperty<World>) e).getValue();
             renderMap();
             newWorld.seed();
-            newWorld.getLogs()
-                    .addListener((ListChangeListener<Log>) change -> {
-                        change.getList()
-                                .stream()
-                                .reduce((prev, next) -> next)
-                                .ifPresent(this::log);
-                        logs.scrollTo(logs.getItems().size() - 1);
-                    });
             newWorld.render();
+            newWorld.getLogs().forEach(this::log);
             if (newWorld.isGameRunning()) {
                 newWorld.simulateRound();
             }
@@ -368,8 +360,9 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
         return map.getScene().getWindow();
     }
 
-    private void log(Log log) {
+    public void log(Log log) {
         logs.getItems().add(new Label(String.format("[%d] %s", log.round(), log.message())));
+        logs.scrollTo(logs.getItems().size() - 1);
     }
 
     private void log(String message) {

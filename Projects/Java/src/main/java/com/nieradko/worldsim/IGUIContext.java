@@ -1,5 +1,6 @@
 package com.nieradko.worldsim;
 
+import com.nieradko.worldsim.core.Log;
 import com.nieradko.worldsim.core.Organism;
 import com.nieradko.worldsim.core.Position;
 
@@ -10,5 +11,7 @@ public interface IGUIContext {
     void drawOrganism(Organism organism);
     void setupControls(Stream<Position> allNearbyPositions);
     void stopGame();
+
+    void log(Log log);
 }
 

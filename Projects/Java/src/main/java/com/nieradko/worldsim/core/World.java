@@ -5,8 +5,6 @@ import com.nieradko.worldsim.core.animals.*;
 import com.nieradko.worldsim.core.plants.*;
 import com.nieradko.worldsim.core.positions.HexPosition;
 import com.nieradko.worldsim.core.positions.SquarePosition;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     private final int M;
     private final WorldMode mode;
     private final ArrayList<Organism> organisms = new ArrayList<>();
-    private final ObservableList<Log> logs = FXCollections.observableArrayList();
+    private final ArrayList<Log> logs = new ArrayList<>();
     private int round = 1;
     private WorldState state = WorldState.WaitingForNewRound;
     private boolean isGameRunning = true;
@@ -99,6 +97,10 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
         return M;
     }
 
+    public ArrayList<Log> getLogs() {
+        return logs;
+    }
+
     public void seed() {
         if (getNumberOfLivingOrganisms() == 0) {
             add(Dandelion.class, 1);
@@ -113,10 +115,6 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
             add(Wolf.class, 3);
             add(Human.class, 1);
         }
-    }
-
-    public ObservableList<Log> getLogs() {
-        return logs;
     }
 
     private <T extends Organism> void add(Class<T> c, int n) {
@@ -279,7 +277,9 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
 
     @Override
     public void log(String message) {
-        this.logs.add(new Log(round, message));
+        var log = new Log(round, message);
+        this.logs.add(log);
+        guiContext.log(log);
     }
 
     public Human getHuman() {
