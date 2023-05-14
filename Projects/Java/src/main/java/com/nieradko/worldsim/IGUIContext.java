@@ -9,9 +9,8 @@ import java.util.stream.Stream;
 public interface IGUIContext {
     void clearScreen();
     void drawOrganism(Organism organism);
-    void setupControls(Stream<Position> allNearbyPositions);
+    void setupHumanControls(Stream<Position> allNearbyPositions);
     void stopGame();
-
     void log(Log log);
 }
 

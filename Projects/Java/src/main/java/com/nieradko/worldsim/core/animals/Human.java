@@ -14,29 +14,43 @@ public class Human extends Animal {
 
     @Override
     protected void handleAction(IActionContext context) {
-        specialPowerTick();
+        specialPowerTick(context);
 
-        context.getGUIContext().setupControls(getPosition().getAllNearbyPositions(1));
+        context.getGUIContext().setupHumanControls(getPosition().getAllNearbyPositions(1));
     }
 
-    public boolean isSpecialPowerActive() {
-        return isSpecialPowerActive;
+    @Override
+    public Color getColor() {
+        if (isSpecialPowerActive) {
+            return Color.DARKORANGE;
+        }else {
+            return super.getColor();
+        }
     }
 
-    public boolean tryToActivateSpecialPower() {
+    public int getSpecialPowerTimer() {
+        return specialPowerTimer;
+    }
+
+    public void tryToActivateSpecialPower(IActionContext context) {
         if (!isSpecialPowerActive && specialPowerTimer == 0) {
+            context.log("Human special power actived!");
             isSpecialPowerActive = true;
             specialPowerTimer = 5;
-            return true;
         }
 
-        return false;
     }
 
-    private void specialPowerTick() {
+    private void specialPowerTick(IActionContext context) {
+        if (isSpecialPowerActive) {
+            context.getNearbyAnimals(getPosition())
+                    .forEach(context::kill);
+        }
+
         specialPowerTimer = Math.max(0, specialPowerTimer - 1);
 
         if (specialPowerTimer == 0 && isSpecialPowerActive) {
+            context.log("Human special power disabled");
             isSpecialPowerActive = false;
             specialPowerTimer = 5;
         }

@@ -30,6 +30,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
     private final SimpleObjectProperty<World> world = new SimpleObjectProperty<>(null);
     private final SimpleStringProperty saveFile = new SimpleStringProperty(null);
     private VBox[] controlButtons = null;
+    private VBox abilityButton = null;
 
     @FXML
     public HBox map;
@@ -85,6 +86,8 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
             case Hex -> drawHexMap(world.getValue().getN(), world.getValue().getM());
             case Square -> drawSquareMap(world.getValue().getN(), world.getValue().getM());
         }
+
+        abilityButton.getChildren().add(new Label("🔥"));
     }
 
     private void drawSquareMap(int n, int m) {
@@ -139,6 +142,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(0),
                 (VBox)((VBox)controls.getChildren().get(2)).getChildren().get(0),
         };
+        abilityButton = (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(1);
     }
 
     private void drawHexMap(int n, int m) {
@@ -201,6 +205,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(2),
                 (VBox)((VBox)controls.getChildren().get(0)).getChildren().get(1)
         };
+        abilityButton = (VBox)((VBox)controls.getChildren().get(1)).getChildren().get(1);
     }
 
     private void addOnField(Position position) {
@@ -250,7 +255,7 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
     }
 
     @Override
-    public void setupControls(Stream<Position> allNearbyPositions) {
+    public void setupHumanControls(Stream<Position> allNearbyPositions) {
         var iterator = allNearbyPositions.iterator();
         for (var button : controlButtons) {
             button.setPadding(new Insets(5));
@@ -267,6 +272,17 @@ public class MainController implements IGUIContext, IWorldEventsHandler {
                 }
             });
         }
+
+        var specialPowerTimer = world.getValue().getHuman().getSpecialPowerTimer();
+        ((Label)abilityButton.getChildren().get(0)).setText(specialPowerTimer == 0 ? "🔥" : Integer.toString(specialPowerTimer));
+
+        abilityButton.setOnMouseClicked(e -> {
+            var tmp = world.getValue();
+            if (tmp != null) {
+                tmp.getHuman().tryToActivateSpecialPower(tmp);
+                tmp.render();
+            }
+        });
     }
 
     @Override

@@ -266,11 +266,6 @@ public class World implements IWorldContext, IActionContext, Serializable, ILogg
     }
 
     @Override
-    public void requestRender() {
-        render();
-    }
-
-    @Override
     public IGUIContext getGUIContext() {
         return guiContext;
     }
