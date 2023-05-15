@@ -1,0 +1,12 @@
+.hex-tile {
+    -fx-shape: "M 300,150 225,280 75,280 0,150 75,20 225,20 z";
+    -fx-border-color: Black;
+    -fx-border-width: 1px;
+    -fx-alignment: center;
+}
+
+.square-tile {
+    -fx-border-color: Black;
+    -fx-border-width: 1px;
+    -fx-alignment: center;
+}
